@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import NoteCharge from "./note";
 
 export default function Navbar() {
   const onPress = () => {
@@ -86,7 +87,9 @@ export default function Navbar() {
         >
           <Ionicons name="ios-add" size={40} color="#303030" />
         </TouchableOpacity>
-        <View style={styles.content}>{/* conteúdo principal aqui */}</View>
+        <View style={styles.content}>
+          <NoteCharge/>
+        </View>
       </View>
     </DrawerLayoutAndroid>
   );
@@ -133,9 +136,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginTop: 60,
-    backgroundColor: "#f5f5f5",
     alignItems: "center",
     justifyContent: "center",
+    display: "flex",
   },
 
   button: {
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 30,
     fontWeight: "500",
-    color: '#b6c4dd',
+    color: "#b6c4dd",
   },
 
   inputBody: {
