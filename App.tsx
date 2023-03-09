@@ -1,8 +1,10 @@
 import { View, StyleSheet } from "react-native";
+import Home from "./src/components/home";
+import Login from "./src/components/login";
 import Navbar from "./src/components/navbar";
 
 export default function App() {
-  return <Navbar />;
+  return <Login />;
 }
 
 const styles = StyleSheet.create({
