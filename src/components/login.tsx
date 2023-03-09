@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { CheckBox } from "react-native-elements";
 export default function Login() {
-  const onPress = () => {
+  const onPress = () => { 
     console.log("Botão de adicionar pressionado");
   };
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -27,7 +29,7 @@ export default function Login() {
             style={styles.inputTitle}
           />
         </View>
-
+        
         <TouchableOpacity
           style={styles.button}
           onPress={() => setModalVisible(true)}
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
     height: 60,
     padding: 0,
     marginTop: 10,
+    paddingHorizontal: 10,
     marginBottom: 10,
     fontSize: 30,
     fontWeight: "500",
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
   inputs: {},
 
   title: {
-    fontSize: 40,
+    fontSize: 30,
     color: "#b6c4dd",
   },
 
@@ -129,5 +132,15 @@ const styles = StyleSheet.create({
 
   buttonEnter: {
     fontSize: 20,
+  },
+
+  esqueci: {
+    color: "#b6c4dd",
+  },
+
+  buttonEsqueci: {
+    display: "flex",
+    marginVertical: 10,
+    width: "100%",
   },
 });
