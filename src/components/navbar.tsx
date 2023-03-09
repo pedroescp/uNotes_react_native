@@ -89,6 +89,8 @@ export default function Navbar() {
         </TouchableOpacity>
         <View style={styles.content}>
           <NoteCharge/>
+          <NoteCharge/>
+          <NoteCharge/>
         </View>
       </View>
     </DrawerLayoutAndroid>
@@ -135,10 +137,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 60,
+    gap: 10,
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
+    size: 3
   },
 
   button: {
