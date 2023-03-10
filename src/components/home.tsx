@@ -1,12 +1,17 @@
 import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
 import Navbar from "./navbar";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-export default function Home() {
+export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
         
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.push('Navbar', {
+            itemId: 86,
+            otherParam: 'Digite um titulo',
+          })}>
         <Text style={styles.buttonText}>Notas</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
