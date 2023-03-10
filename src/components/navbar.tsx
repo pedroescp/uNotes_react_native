@@ -11,12 +11,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import NoteCharge from "./note";
 
-export default function Navbar() {
+export default function Navbar({route, navigation}) {
   const onPress = () => {
     console.log("Botão de adicionar pressionado");
   };
 
   const [modalVisible, setModalVisible] = useState(false);
+  const { itemId, otherParam } = route.params;
 
   return (
     <DrawerLayoutAndroid
@@ -42,7 +43,7 @@ export default function Navbar() {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <TextInput
-                placeholder={"Titulo da nota"}
+                placeholder={JSON.stringify(otherParam)}
                 placeholderTextColor={"#9ea1a6"}
                 style={styles.inputTitle}
               />
