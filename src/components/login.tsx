@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
-export default function Login() {
+
+export default function Login({ navigation }) {
   const onPress = () => { 
     console.log("Botão de adicionar pressionado");
   };
@@ -32,7 +33,10 @@ export default function Login() {
         
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setModalVisible(true)}
+          onPress={() => navigation.push('Home', {
+            itemId: 86,
+            otherParam: 'Digite um titulo',
+          })}
           activeOpacity={0.7}
         >
           <Text style={styles.buttonEnter}>Entrar</Text>
