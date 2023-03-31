@@ -1,48 +1,71 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, View, TouchableOpacity, Text, Alert } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { CheckBox } from "react-native-elements";
+import { NavigationContext } from "@react-navigation/native";
+import { AuthContext } from "../content/auth";
+import { AuthProvider } from "../content/auth";
+import { getData } from "../utils/asyncStorage";
 
-export default function Login({ navigation }) {
-  const onPress = () => { 
-    console.log("Botão de adicionar pressionado");
-  };
+export default function Login() {
+  const { login }: any = useContext(AuthContext);
+  const navigation = useContext(NavigationContext);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const getUser = async () => {
+      let user = await getData("token");
+
+      if (user) navigation?.navigate("Home");
+      
+    };
+    getUser();
+  });
+
+  async function handleLogin() {
+    if (email == "" || password == "") {
+    }
+
+    login(email, password, navigation);
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Entrar</Text>
-        <View style={styles.inputs}>
-          <View style={styles.divider}></View>
-          <Text style={styles.labels}>Usuario/E-email</Text>
-          <TextInput
-            placeholderTextColor={"#9ea1a6"}
-            style={styles.inputTitle}
-          />
+    <AuthProvider>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <Text style={styles.title}>Entrar</Text>
+          <View style={styles.inputs}>
+            <View style={styles.divider}></View>
+            <Text style={styles.labels}>Usuario/E-email</Text>
+            <TextInput
+              placeholderTextColor={"#9ea1a6"}
+              value={email}
+              onChangeText={setEmail}
+              style={styles.inputTitle}
+            />
+          </View>
+          <View>
+            <Text style={styles.labels}>Senha</Text>
+            <TextInput
+              placeholderTextColor={"#9ea1a6"}
+              onChangeText={setPassword}
+              value={password}
+              style={styles.inputTitle}
+              secureTextEntry={true}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleLogin}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.buttonEnter}>Entrar</Text>
+          </TouchableOpacity>
         </View>
-        <View>
-          <Text style={styles.labels}>Senha</Text>
-          <TextInput
-            placeholderTextColor={"#9ea1a6"}
-            style={styles.inputTitle}
-          />
-        </View>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.push('Home', {
-            itemId: 86,
-            otherParam: 'Digite um titulo',
-          })}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.buttonEnter}>Entrar</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </AuthProvider>
   );
 }
 
