@@ -5,19 +5,10 @@ import {
   TouchableOpacity,
   Text,
   DrawerLayoutAndroid,
-  Modal,
-  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import NoteCharge from "./note";
 
-export default function Navbar({route, navigation}) {
-  const onPress = () => {
-    console.log("Botão de adicionar pressionado");
-  };
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const { itemId, otherParam } = route.params;
+export default function Navbar({ children, navigation }: any) {
 
   return (
     <DrawerLayoutAndroid
@@ -30,42 +21,6 @@ export default function Navbar({route, navigation}) {
       )}
     >
       <View style={styles.container}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          style={styles.modalBody}
-          visible={modalVisible}
-          onRequestClose={() => {
-            //Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TextInput
-                placeholder={JSON.stringify(otherParam)}
-                placeholderTextColor={"#9ea1a6"}
-                style={styles.inputTitle}
-              />
-
-              <TextInput
-                placeholder={"Escreva uma nota"}
-                multiline={true}
-                numberOfLines={4}
-                placeholderTextColor={"#9ea1a6"}
-                style={styles.inputBody}
-              />
-              <View style={styles.viewBar}>
-                <TouchableOpacity>
-                  <Ionicons name="ios-trash" size={28} color="#8e8e8e" />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Ionicons name="ios-archive" size={28} color="#8e8e8e" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
 
         <View style={styles.navbar}>
           <TouchableOpacity style={styles.icon}>
@@ -74,25 +29,17 @@ export default function Navbar({route, navigation}) {
           <TouchableOpacity style={styles.icon}>
             <Ionicons name="ios-search" size={28} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => navigation.navigate("Home")}
+          >
             <Ionicons name="ios-home" size={28} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>
             <Ionicons name="ios-person" size={28} color="white" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalVisible(true)}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="ios-add" size={40} color="#303030" />
-        </TouchableOpacity>
-        <View style={styles.content}>
-          <NoteCharge/>
-          <NoteCharge/>
-          <NoteCharge/>
-        </View>
+            {children}
       </View>
     </DrawerLayoutAndroid>
   );
@@ -137,12 +84,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    flex: 1,
-    gap: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-    size: 3
+    top: 170,
+    maxWidth: '100%',
+    flexDirection: "row",
+    
   },
 
   button: {
@@ -212,7 +157,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#334255",
     borderRadius: 20,
     padding: 20,
+    display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 10,
@@ -235,5 +182,20 @@ const styles = StyleSheet.create({
   modalBody: {
     backgroundColor: "#334155",
     elevation: 5,
+  },
+  QuillEditor: {
+    width: 500,
+    padding: 0,
+    maxWidth: `100%`,
+    backgroundColor: "#262b36",
+  },
+
+  QuillToolbar: {
+    position: "absolute",
+    flex: 1,
+  },
+
+  root: {
+    flex: 1,
   },
 });
