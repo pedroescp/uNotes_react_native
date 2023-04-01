@@ -13,7 +13,7 @@ import QuillEditor, { QuillToolbar } from "react-native-cn-quill";
 import api from "../utils/api";
 import Navbar from "./navbar";
 
-export default function NoteCharge() {
+export default function NoteCharge({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState([]);
   const [showEmpty, setShowEmpty] = useState(false);
@@ -37,7 +37,7 @@ export default function NoteCharge() {
   }, []);
 
   return (
-    <Navbar>
+    <Navbar navigation={navigation}>
       <Modal
         animationType="slide"
         transparent={true}

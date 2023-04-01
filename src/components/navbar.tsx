@@ -1,45 +1,137 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
   DrawerLayoutAndroid,
+  Modal,
+  TextInput,
+  Button,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "react-native-elements/dist/image/Image";
 
 export default function Navbar({ children, navigation }: any) {
+  const drawer = useRef<DrawerLayoutAndroid>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const navigationView = () => (
+    <View style={[styles.drawer, styles.navigationContainer]}>
+      <TouchableOpacity
+        style={[styles.drawerIcon, styles.drawerButtonClose]}
+        onPress={() => drawer.current?.closeDrawer()}
+      >
+        <Ionicons name="close-outline" size={40} color="#c5cedd" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.drawerIcon}
+        onPress={() => navigation.navigate("Home")}
+      >
+        <Ionicons name="arrow-undo-outline" size={28} color="#c5cedd" />
+        <Text style={styles.letterDrawe}>Home</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.drawerIcon}
+        onPress={() => navigation.navigate("Note")}
+      >
+        <Ionicons name="create-outline" size={28} color="#c5cedd" />
+
+        <Text style={styles.letterDrawe}>Notas</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.drawerIcon}>
+        <Ionicons name="document-text-outline" size={28} color="#c5cedd" />
+        <Text style={styles.letterDrawe}>Documentos</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.drawerIcon}>
+        <Ionicons name="archive-outline" size={28} color="#c5cedd" />
+        <Text style={styles.letterDrawe}>Arquivos</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.drawerIcon}>
+        <Ionicons name="trash-outline" size={28} color="#c5cedd" />
+        <Text style={styles.letterDrawe}>Lixeira</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.drawerIcon}>
+        <Ionicons name="people-outline" size={28} color="#c5cedd" />
+        <Text style={styles.letterDrawe}>Grupo</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.profile}>
+        <View style={styles.userIcon}>
+          <Image
+            source={{ uri: "https://picsum.photos/200" }}
+            style={styles.icon}
+          />
+        </View>
+        <View style={styles.userInfo}>
+          <Text style={[styles.fontLetter, styles.name]}>Pedro</Text>
+          <Text style={[styles.fontLetter, styles.role]}>Desenvolvedor</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <DrawerLayoutAndroid
-      drawerWidth={250}
-      drawerPosition="left"
-      renderNavigationView={() => (
-        <View style={styles.drawerContent}>
-          <Text>Conteúdo do Drawer aqui</Text>
-        </View>
-      )}
+      ref={drawer}
+      drawerWidth={300}
+      drawerPosition={"left"}
+      renderNavigationView={navigationView}
     >
-      <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        style={styles.modalBody}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={styles.viewBar}>
+              <TouchableOpacity
+                style={styles.Button}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.TextButtonModal}>Fechar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.Button}>
+                <Text style={styles.TextButtonModal}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
+      <View style={styles.container}>
         <View style={styles.navbar}>
           <TouchableOpacity style={styles.icon}>
-            <Ionicons name="ios-menu-outline" size={28} color="white" />
+            <Ionicons
+              name="ios-menu-outline"
+              size={28}
+              color="#c5cedd"
+              onPress={() => drawer.current?.openDrawer()}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>
-            <Ionicons name="ios-search" size={28} color="white" />
+            <Ionicons name="ios-search" size={28} color="#c5cedd" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.icon}
             onPress={() => navigation.navigate("Home")}
           >
-            <Ionicons name="ios-home" size={28} color="white" />
+            <Ionicons name="ios-home" size={28} color="#c5cedd" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
-            <Ionicons name="ios-person" size={28} color="white" />
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate("Profile")}>
+            <Ionicons name="ios-person" size={28} color="#c5cedd" />
           </TouchableOpacity>
         </View>
-            {children}
+        {/* {children} */}
       </View>
     </DrawerLayoutAndroid>
   );
@@ -85,9 +177,8 @@ const styles = StyleSheet.create({
   },
   content: {
     top: 170,
-    maxWidth: '100%',
+    maxWidth: "100%",
     flexDirection: "row",
-    
   },
 
   button: {
@@ -133,7 +224,6 @@ const styles = StyleSheet.create({
   },
 
   viewBar: {
-    backgroundColor: "#f3f3f3",
     position: "absolute",
     bottom: 10,
     padding: 0,
@@ -145,6 +235,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 50,
     width: "100%",
+  },
+
+  Button: {
+    backgroundColor: "red",
+    width: 100,
+    height: 40,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  TextButtonModal: {
+    fontSize: 30,
+    fontWeight: "500",
   },
 
   modalText: {
@@ -168,34 +272,106 @@ const styles = StyleSheet.create({
     shadowOpacity: 1.25,
     shadowRadius: 20,
     elevation: 90,
-    width: "100%",
-    height: "100%",
+    width: "90%",
+    height: "50%",
   },
 
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    elevation: 5,
   },
 
   modalBody: {
-    backgroundColor: "#334155",
+    backgroundColor: "#0000",
     elevation: 5,
-  },
-  QuillEditor: {
-    width: 500,
-    padding: 0,
-    maxWidth: `100%`,
-    backgroundColor: "#262b36",
-  },
-
-  QuillToolbar: {
-    position: "absolute",
-    flex: 1,
   },
 
   root: {
     flex: 1,
+  },
+
+  drawer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: `100%`,
+    display: "flex",
+    gap: 20,
+    padding: 16,
+  },
+  navigationContainer: {
+    backgroundColor: "#334155",
+  },
+  paragraph: {
+    padding: 16,
+    fontSize: 15,
+    textAlign: "center",
+  },
+
+  profile: {
+    width: "100%",
+    borderRadius: 30,
+    height: "10%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    bottom: 0,
+    position: "absolute",
+    paddingHorizontal: 10,
+  },
+
+  userIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    overflow: "hidden",
+    marginRight: 10,
+  },
+
+  userInfo: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 2,
+  },
+
+  role: {
+    fontSize: 14,
+  },
+
+  fontLetter: {
+    color: "#c5cedd",
+  },
+
+  drawerButtonClose: {
+    position: "absolute",
+    top: 50,
+    justifyContent: "flex-end",
+    width: `100%`,
+  },
+
+  drawerIcon: {
+    width: "100%",
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+  },
+
+  letterDrawe: {
+    color: "#c5cedd",
+    fontSize: 30,
+  },
+
+  drawerProfileDivision: {
+    width: `100%`,
   },
 });
