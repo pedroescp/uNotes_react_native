@@ -7,7 +7,7 @@ import {
   DrawerLayoutAndroid,
   Modal,
   TextInput,
-  Button,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native-elements/dist/image/Image";
@@ -15,6 +15,7 @@ import { Image } from "react-native-elements/dist/image/Image";
 export default function Navbar({ children, navigation }: any) {
   const drawer = useRef<DrawerLayoutAndroid>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showInput, setShowInput] = useState(false);
 
   const navigationView = () => (
     <View style={[styles.drawer, styles.navigationContainer]}>
@@ -110,26 +111,56 @@ export default function Navbar({ children, navigation }: any) {
 
       <View style={styles.container}>
         <View style={styles.navbar}>
-          <TouchableOpacity style={styles.icon}>
-            <Ionicons
-              name="ios-menu-outline"
-              size={28}
-              color="#c5cedd"
-              onPress={() => drawer.current?.openDrawer()}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
-            <Ionicons name="ios-search" size={28} color="#c5cedd" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => navigation.navigate("Home")}
-          >
-            <Ionicons name="ios-home" size={28} color="#c5cedd" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate("Profile")}>
-            <Ionicons name="ios-person" size={28} color="#c5cedd" />
-          </TouchableOpacity>
+          {!showInput && (
+            <>
+              <TouchableOpacity style={styles.icon}>
+                <Ionicons
+                  name="ios-menu-outline"
+                  size={28}
+                  color="#c5cedd"
+                  onPress={() => drawer.current?.openDrawer()}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.icon}>
+                <Ionicons
+                  name="ios-search"
+                  size={28}
+                  color="#c5cedd"
+                  onPress={() => setShowInput(true)}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => navigation.navigate("Home")}
+              >
+                <Ionicons name="ios-home" size={28} color="#c5cedd" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => navigation.navigate("Profile")}
+              >
+                <Ionicons name="ios-person" size={28} color="#c5cedd" />
+              </TouchableOpacity>
+            </>
+          )}
+          {showInput && (
+            <>
+              <TouchableOpacity style={styles.icon}>
+                <Ionicons
+                  name="ios-arrow-back-outline"
+                  size={28}
+                  color="#c5cedd"
+                  onPress={() => setShowInput(false)}
+                />
+              </TouchableOpacity>
+              <TextInput
+                placeholder="Busque Uma Nota"
+                style={styles.NavbarInputSearch}
+                numberOfLines={4}
+                placeholderTextColor={"#9ea1a6"}
+              />
+            </>
+          )}
         </View>
         {/* {children} */}
       </View>
@@ -140,6 +171,14 @@ export default function Navbar({ children, navigation }: any) {
 const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#2196F3",
+  },
+
+  NavbarInputSearch: {
+    borderRadius: 10,
+    color: "#9ea1a6",
+    fontSize: 30,
+    width: `100%`,
+    maxWidth: 240,
   },
 
   textStyle: {
@@ -373,5 +412,9 @@ const styles = StyleSheet.create({
 
   drawerProfileDivision: {
     width: `100%`,
+  },
+
+  hidden: {
+    display: "none",
   },
 });

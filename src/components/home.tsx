@@ -1,7 +1,6 @@
 import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
 
 export default function Home({ navigation }: any) {
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -14,7 +13,14 @@ export default function Home({ navigation }: any) {
       >
         <Text style={styles.buttonText}>Notas</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={[styles.button]}
+        onPress={() =>
+          navigation.push("Notes", {
+            itemId: 86,
+          })
+        }
+      >
         <Text style={styles.buttonText}>Documentacao</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navbar}>
@@ -38,8 +44,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#334155",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     color: "#f28c18",
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    top: 30,
+    left: 0,
     padding: 10,
   },
   fontOrange: {
@@ -47,7 +58,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    height: "40%",
+    height: "42%",
     marginVertical: 10,
     borderRadius: 30,
     borderWidth: 2,
@@ -62,6 +73,8 @@ const styles = StyleSheet.create({
     color: "#f28c18",
   },
   navbar: {
+    position: "absolute",
+    bottom: 10,
     backgroundColor: "#212630",
     width: "100%",
     borderRadius: 30,
