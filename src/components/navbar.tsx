@@ -14,7 +14,7 @@ import { Image } from "react-native-elements/dist/image/Image";
 
 export default function Navbar({ children, navigation }: any) {
   const drawer = useRef<DrawerLayoutAndroid>(null);
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigationView = () => (
     <View style={[styles.drawer, styles.navigationContainer]}>
@@ -127,7 +127,7 @@ export default function Navbar({ children, navigation }: any) {
           >
             <Ionicons name="ios-home" size={28} color="#c5cedd" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate("Profile")}>
             <Ionicons name="ios-person" size={28} color="#c5cedd" />
           </TouchableOpacity>
         </View>
