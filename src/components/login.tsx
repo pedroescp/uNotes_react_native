@@ -12,13 +12,13 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showRegister, setRegister] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
       let user = await getData("token");
 
       if (user) navigation?.navigate("Home");
-      
     };
     getUser();
   });
@@ -33,36 +33,95 @@ export default function Login() {
   return (
     <AuthProvider>
       <View style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.title}>Entrar</Text>
-          <View style={styles.inputs}>
-            <View style={styles.divider}></View>
-            <Text style={styles.labels}>Usuario/E-email</Text>
-            <TextInput
-              placeholderTextColor={"#9ea1a6"}
-              value={email}
-              onChangeText={setEmail}
-              style={styles.inputTitle}
-            />
-          </View>
-          <View>
-            <Text style={styles.labels}>Senha</Text>
-            <TextInput
-              placeholderTextColor={"#9ea1a6"}
-              onChangeText={setPassword}
-              value={password}
-              style={styles.inputTitle}
-              secureTextEntry={true}
-            />
-          </View>
+        <View style={{...styles.card, height: showRegister ? 600 : 500}}>
+          {!showRegister && (
+            <>
+              <Text style={styles.title}>Entrar</Text>
+              <View style={styles.inputs}>
+                <View style={styles.divider}></View>
+                <Text style={styles.labels}>Usuario/E-email</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  value={email}
+                  onChangeText={setEmail}
+                  style={styles.inputTitle}
+                />
+              </View>
+              <View>
+                <Text style={styles.labels}>Senha</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  onChangeText={setPassword}
+                  value={password}
+                  style={styles.inputTitle}
+                  secureTextEntry={true}
+                />
+              </View>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleLogin}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.buttonEnter}>Entrar</Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleLogin}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.buttonEnter}>Entrar</Text>
+              </TouchableOpacity>
+            </>
+          )}
+          {showRegister && (
+            <>
+              <Text style={{...styles.title}}>Registro</Text>
+              <View style={styles.inputs}>
+                <View style={styles.divider}></View>
+                <Text style={styles.labels}>Usuario</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  value={email}
+                  onChangeText={setEmail}
+                  style={styles.inputTitle}
+                />
+              </View>
+              <View>
+                <Text style={styles.labels}>E-mail</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  onChangeText={setPassword}
+                  value={password}
+                  style={styles.inputTitle}
+                  secureTextEntry={true}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.labels}>Senha</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  onChangeText={setPassword}
+                  value={password}
+                  style={styles.inputTitle}
+                  secureTextEntry={true}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.labels}>Repita a senha</Text>
+                <TextInput
+                  placeholderTextColor={"#9ea1a6"}
+                  onChangeText={setPassword}
+                  value={password}
+                  style={styles.inputTitle}
+                  secureTextEntry={true}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleLogin}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.buttonEnter}>REGISTRAR E ENTRAR !</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </AuthProvider>
@@ -96,9 +155,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 50,
     padding: 10,
-    height: 500,
     width: "100%",
   },
+  
 
   content: {
     flex: 1,
