@@ -14,9 +14,7 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     const getUser = async () => {
-      let user = await getData("token");
-      
-      
+      let user = await getData("token");   
 
       return user;
     };

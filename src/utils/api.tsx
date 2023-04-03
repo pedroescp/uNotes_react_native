@@ -19,6 +19,15 @@ const api = {
     return request;
   },
 
+  usuarioRegister: async (data: any) => {
+    const request = await axios({
+      method: "POST",
+      data: data,
+      url: "usuario",
+    });
+    return request;
+  },
+
   notesPost: async (data: any) => {
     let authorization = await getAutorization();
 

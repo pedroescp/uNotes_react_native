@@ -162,7 +162,7 @@ export default function Navbar({ children, navigation }: any) {
             </>
           )}
         </View>
-        {/* {children} */}
+        {children}
       </View>
     </DrawerLayoutAndroid>
   );
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   NavbarInputSearch: {
     borderRadius: 10,
     color: "#9ea1a6",
-    fontSize: 30,
+    fontSize: 25,
     width: `100%`,
     maxWidth: 240,
   },
