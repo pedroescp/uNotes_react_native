@@ -1,6 +1,18 @@
-import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text, Image,  } from "react-native";
+import React, { useEffect, useState } from "react";
+import { getData } from "../utils/asyncStorage";
 
 export default function Home({ navigation }: any) {
+
+  const [user, setUser] = useState('')
+  useEffect(() => {
+    const getUser = async () => {
+      let user = await getData("user");
+      setUser(JSON.parse(user).data.login);      
+    };
+    getUser()
+  });
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -31,7 +43,7 @@ export default function Home({ navigation }: any) {
           />
         </View>
         <View style={styles.userInfo}>
-          <Text style={[styles.fontLetter, styles.name]}>Pedro</Text>
+          <Text style={[styles.fontLetter, styles.name]}>{user}</Text>
           <Text style={[styles.fontLetter, styles.role]}>Desenvolvedor</Text>
         </View>
       </TouchableOpacity>
