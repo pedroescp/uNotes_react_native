@@ -11,11 +11,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native-elements/dist/image/Image";
+import { getData } from "../utils/asyncStorage";
 
 export default function Navbar({ children, navigation }: any) {
   const drawer = useRef<DrawerLayoutAndroid>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const [user, setUser] = useState('...')
+
+  const getUser = async () => {
+    let user = await getData("user");
+    setUser(JSON.parse(user).data.login);      
+  };
+  getUser()
 
   const navigationView = () => (
     <View style={[styles.drawer, styles.navigationContainer]}>
@@ -71,7 +79,7 @@ export default function Navbar({ children, navigation }: any) {
           />
         </View>
         <View style={styles.userInfo}>
-          <Text style={[styles.fontLetter, styles.name]}>Pedro</Text>
+          <Text style={[styles.fontLetter, styles.name]}>{user}</Text>
           <Text style={[styles.fontLetter, styles.role]}>Desenvolvedor</Text>
         </View>
       </TouchableOpacity>
