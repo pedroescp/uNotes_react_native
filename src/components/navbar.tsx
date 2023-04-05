@@ -5,25 +5,31 @@ import {
   TouchableOpacity,
   Text,
   DrawerLayoutAndroid,
-  Modal,
   TextInput,
-  TouchableWithoutFeedback,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native-elements/dist/image/Image";
-import { getData } from "../utils/asyncStorage";
+import { getData, removeData } from "../utils/asyncStorage";
 
 export default function Navbar({ children, navigation }: any) {
   const drawer = useRef<DrawerLayoutAndroid>(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [user, setUser] = useState('...')
+  const [user, setUser] = useState("...");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getUser = async () => {
     let user = await getData("user");
-    setUser(JSON.parse(user).data.login);      
+    setUser(JSON.parse(user).data.login);
   };
-  getUser()
+  getUser();
+
+  const logout = async () => {
+    removeData("user");
+    removeData("token");
+
+    navigation.navigate("Login");
+  };
 
   const navigationView = () => (
     <View style={[styles.drawer, styles.navigationContainer]}>
@@ -71,7 +77,10 @@ export default function Navbar({ children, navigation }: any) {
         <Text style={styles.letterDrawe}>Grupo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.profile}>
+      <TouchableOpacity
+        style={styles.profile}
+        onPress={() => {setModalVisible(true), drawer.current?.closeDrawer()}}
+      >
         <View style={styles.userIcon}>
           <Image
             source={{ uri: "https://picsum.photos/200" }}
@@ -93,30 +102,6 @@ export default function Navbar({ children, navigation }: any) {
       drawerPosition={"left"}
       renderNavigationView={navigationView}
     >
-      <Modal
-        animationType="slide"
-        transparent={true}
-        style={styles.modalBody}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.viewBar}>
-              <TouchableOpacity
-                style={styles.Button}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.TextButtonModal}>Fechar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.Button}>
-                <Text style={styles.TextButtonModal}>Logout</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
       <View style={styles.container}>
         <View style={styles.navbar}>
           {!showInput && (
@@ -170,6 +155,62 @@ export default function Navbar({ children, navigation }: any) {
             </>
           )}
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          style={styles.modalBody}
+          visible={modalVisible}
+          //onRequestClose={() => }
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text
+                style={[
+                  {
+                    fontSize: 25,
+                    color: "#9ea1a6",
+                    position: "absolute",
+                    top: 25,
+                    left: 45,
+                    fontWeight: "bold",
+                  },
+                ]}
+              >
+                Desconectar?
+              </Text>
+              <Text style={[{ fontSize: 25, color: "#9ea1a6" }]}>
+                Voce tem certeza que deseja descontectar sua conta?
+              </Text>
+              <View style={styles.viewBar}>
+                <TouchableOpacity
+                  style={[
+                    styles.Button,
+                    {
+                      borderRadius: 10,
+                      borderWidth: 2,
+                      backgroundColor: "transparent",
+                      borderColor: "transparent",
+                    },
+                  ]}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={[styles.TextButtonModal, { color: "#a6adbb" }]}>
+                    Fechar
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.Button, { backgroundColor: "#f87272" }]}
+                  onPress={() => logout()}
+                >
+                  <Text style={[styles.TextButtonModal, { color: "#470000" }]}>
+                    Desconectar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         {children}
       </View>
     </DrawerLayoutAndroid>
@@ -272,7 +313,7 @@ const styles = StyleSheet.create({
 
   viewBar: {
     position: "absolute",
-    bottom: 10,
+    bottom: 25,
     padding: 0,
     borderRadius: 10,
     height: 50,
@@ -286,15 +327,16 @@ const styles = StyleSheet.create({
 
   Button: {
     backgroundColor: "red",
-    width: 100,
-    height: 40,
+    width: 130,
+    height: 60,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    padding: 10,
   },
 
   TextButtonModal: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: "500",
   },
 
@@ -320,7 +362,7 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 90,
     width: "90%",
-    height: "50%",
+    height: "30%",
   },
 
   centeredView: {
@@ -332,7 +374,13 @@ const styles = StyleSheet.create({
 
   modalBody: {
     backgroundColor: "#0000",
-    elevation: 5,
+    shadowColor: "#00000",
+    shadowOffset: { width: 100, height: 100 },
+    shadowOpacity: 0,
+    shadowRadius: 1,
+    elevation: 100,
+    borderWidth: 1,
+    borderColor: "#000",
   },
 
   root: {

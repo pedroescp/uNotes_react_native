@@ -1,17 +1,32 @@
-import { StyleSheet, TouchableOpacity, View, Text, Image,  } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Image,
+  Modal,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { getData } from "../utils/asyncStorage";
+import { getData, removeData } from "../utils/asyncStorage";
 
 export default function Home({ navigation }: any) {
+  const [user, setUser] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const [user, setUser] = useState('')
   useEffect(() => {
     const getUser = async () => {
       let user = await getData("user");
-      setUser(JSON.parse(user).data.login);      
+      setUser(JSON.parse(user).data.login);
     };
-    getUser()
+    getUser();
   });
+
+  const logout = async () => {
+    removeData("user");
+    removeData("token");
+
+    navigation.navigate("Login");
+  };
 
   return (
     <View style={styles.container}>
@@ -35,7 +50,10 @@ export default function Home({ navigation }: any) {
       >
         <Text style={styles.buttonText}>Documentacao</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.navbar}>
+      <TouchableOpacity
+        style={styles.navbar}
+        onPress={() => setModalVisible(true)}
+      >
         <View style={styles.userIcon}>
           <Image
             source={{ uri: "https://picsum.photos/200" }}
@@ -47,6 +65,62 @@ export default function Home({ navigation }: any) {
           <Text style={[styles.fontLetter, styles.role]}>Desenvolvedor</Text>
         </View>
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        style={styles.modalBody}
+        visible={modalVisible}
+        //onRequestClose={() => }
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text
+              style={[
+                {
+                  fontSize: 25,
+                  color: "#9ea1a6",
+                  position: "absolute",
+                  top: 25,
+                  left: 45,
+                  fontWeight: "bold",
+                },
+              ]}
+            >
+              Desconectar?
+            </Text>
+            <Text style={[{ fontSize: 25, color: "#9ea1a6" }]}>
+              Voce tem certeza que deseja descontectar sua conta?
+            </Text>
+            <View style={styles.viewBar}>
+              <TouchableOpacity
+                style={[
+                  styles.Button,
+                  {
+                    borderRadius: 10,
+                    borderWidth: 2,
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
+                  },
+                ]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={[styles.TextButtonModal, { color: "#a6adbb" }]}>
+                  Fechar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.Button, { backgroundColor: "#f87272" }]}
+                onPress={() => logout()}
+              >
+                <Text style={[styles.TextButtonModal, { color: "#470000" }]}>
+                  Desconectar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -121,5 +195,72 @@ const styles = StyleSheet.create({
   },
   fontLetter: {
     color: "#c5cedd",
+  },
+
+  modalBody: {
+    backgroundColor: "#0000",
+    shadowColor: "#00000",
+    shadowOffset: { width: 100, height: 100 },
+    shadowOpacity: 0,
+    shadowRadius: 1,
+    elevation: 100,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+  },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: "#334255",
+    borderRadius: 20,
+    padding: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 1.25,
+    shadowRadius: 20,
+    elevation: 90,
+    width: "90%",
+    height: "30%",
+  },
+
+  viewBar: {
+    position: "absolute",
+    bottom: 25,
+    padding: 0,
+    borderRadius: 10,
+    height: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 50,
+    width: "100%",
+  },
+
+  Button: {
+    backgroundColor: "red",
+    width: 130,
+    height: 60,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+
+  TextButtonModal: {
+    fontSize: 20,
+    fontWeight: "500",
   },
 });
