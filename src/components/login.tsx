@@ -76,7 +76,10 @@ export default function Login() {
         <View style={{ ...styles.card, height: showRegister ? 600 : 500 }}>
           {!showRegister && (
             <>
-              <TouchableOpacity onPress={() => setRegister(true)} style={styles.buttonShowForms}>
+              <TouchableOpacity
+                onPress={() => setRegister(true)}
+                style={styles.buttonShowForms}
+              >
                 <Text style={styles.textShowForm}>Novo? Clique Aqui!</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setRegister(true)}>
@@ -288,5 +291,5 @@ const styles = StyleSheet.create({
   textShowForm: {
     fontSize: 20,
     fontWeight: "500",
-  }
+  },
 });
