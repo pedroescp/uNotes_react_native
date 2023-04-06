@@ -6,35 +6,38 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  SafeAreaView,
-  StatusBar,
+  TextInput,
 } from "react-native";
-import QuillEditor, { QuillToolbar } from "react-native-cn-quill";
 import api from "../utils/api";
 import Navbar from "./navbar";
+import Loading from "./Loading";
+import Empty from "./Empty";
 
 export default function NoteCharge({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [bodyNote, setbodyNote] = useState("");
+  const [title, setTitle] = useState("");
   const _editor = React.createRef();
 
   useEffect(() => {
-    async function getNotes() {
-      //make a filter
-      try {
-        const response = await api.notesGet();
-        setNotes(response.data);
-        if (!response.data || response.data.length <= 0) setShowEmpty(true);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
     getNotes();
   }, []);
+
+  const getNotes = async () => {
+    try {
+      setNotes([]);
+      const response = await api.notesGet();
+      setNotes(response.data);
+      if (!response.data || response.data.length <= 0) setShowEmpty(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Navbar navigation={navigation}>
@@ -53,35 +56,35 @@ export default function NoteCharge({ navigation }: any) {
                 usuarioAtualizacaoId: null,
                 documentoId: null,
               });
-
-              console.log(response);
+              getNotes()
               setModalVisible(!modalVisible);
             } catch (error) {
               console.log(error);
             }
           }
+          setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            {/*               <TextInput
-                placeholder={"Titulo"}
-                placeholderTextColor={"#9ea1a6"}
-                value={title}
-                onChangeText={setTitle}
-                style={styles.inputTitle}
-              />
+            <TextInput
+              placeholder={"Titulo"}
+              placeholderTextColor={"#9ea1a6"}
+              value={title}
+              onChangeText={setTitle}
+              style={styles.inputTitle}
+            />
 
-              <TextInput
-                placeholder={"Escreva uma nota"}
-                multiline={true}
-                numberOfLines={4}
-                value={bodyNote}
-                onChangeText={setbodyNote}
-                placeholderTextColor={"#9ea1a6"}
-                style={styles.inputBody}
-              /> */}
-            <SafeAreaView style={styles.root}>
+            <TextInput
+              placeholder={"Escreva uma nota"}
+              multiline={true}
+              numberOfLines={4}
+              value={bodyNote}
+              onChangeText={setbodyNote}
+              placeholderTextColor={"#9ea1a6"}
+              style={styles.inputBody}
+            />
+            {/*             <SafeAreaView style={styles.root}>
               <StatusBar style="auto" />
               <QuillEditor
                 autoSize
@@ -95,16 +98,17 @@ export default function NoteCharge({ navigation }: any) {
                 options="full"
                 theme="light"
               />
-            </SafeAreaView>
-
-            {/* <View style={styles.viewBar}>
+            </SafeAreaView> */}
+            {
+              <View style={styles.viewBar}>
                 <TouchableOpacity>
                   <Ionicons name="ios-trash" size={28} color="#8e8e8e" />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Ionicons name="ios-archive" size={28} color="#8e8e8e" />
                 </TouchableOpacity>
-              </View> */}
+              </View>
+            }
           </View>
         </View>
       </Modal>
@@ -115,7 +119,8 @@ export default function NoteCharge({ navigation }: any) {
       >
         <Ionicons name="ios-add" size={40} color="#303030" />
       </TouchableOpacity>
-
+      {loading && <Loading />}
+      {showEmpty && <Empty />}
       <View style={styles.div}>
         {!loading &&
           notes.map((note: any) => (
@@ -135,10 +140,9 @@ export default function NoteCharge({ navigation }: any) {
 
 const styles = StyleSheet.create({
   div: {
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 10,
     alignItems: "center",
-    flexGrow: 1,
   },
 
   card: {
