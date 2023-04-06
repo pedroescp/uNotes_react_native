@@ -71,7 +71,7 @@ export default function Home({ navigation }: any) {
         transparent={true}
         style={styles.modalBody}
         visible={modalVisible}
-        //onRequestClose={() => }
+        onRequestClose={() => setModalVisible(!modalVisible)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
