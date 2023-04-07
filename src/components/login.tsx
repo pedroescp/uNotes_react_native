@@ -27,8 +27,8 @@ export default function Login() {
     const getUser = async () => {
       let user = await getData("token");
 
-      await removeData("token");
-      await removeData("user");
+      // await removeData("token");
+      // await removeData("user");
 
       if (user) navigation?.navigate("Home");
     };
