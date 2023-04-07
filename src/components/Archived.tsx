@@ -7,15 +7,22 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  FlatList,
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
 import Loading from "./Loading";
 import Empty from "./Empty";
 
-export default function Archived({ navigation }: any) {
+export default function NoteCharge({ navigation }: any) {
+  interface Note {
+    id: number;
+    titulo: string;
+    texto: string;
+  }
+
   const [loading, setLoading] = useState(true);
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [bodyNote, setbodyNote] = useState("");
@@ -39,6 +46,10 @@ export default function Archived({ navigation }: any) {
     }
   };
 
+  const openModal = async (id: any) => {
+    setModalVisible(true);
+  };
+
   return (
     <Navbar navigation={navigation}>
       <Modal
@@ -56,7 +67,7 @@ export default function Archived({ navigation }: any) {
                 usuarioAtualizacaoId: null,
                 documentoId: null,
               });
-              navigation.navigate("Notes")
+              getNotes();
               setModalVisible(!modalVisible);
             } catch (error) {
               console.log(error);
@@ -122,17 +133,27 @@ export default function Archived({ navigation }: any) {
       {loading && <Loading />}
       {showEmpty && <Empty />}
       <View style={styles.div}>
-        {!loading &&
-          notes.map((note: any) => (
-            <View style={styles.card} key={note.id} id={note.id}>
-              <View style={styles.header}>
-                <Text style={styles.title}>{note.titulo}</Text>
-              </View>
-              <View style={styles.body}>
-                <Text style={styles.content}>{note.texto}</Text>
-              </View>
-            </View>
-          ))}
+        {!loading && (
+          <FlatList
+            data={notes}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            contentContainerStyle={{padding: 16}}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => openModal(item.id)}
+              >
+                <View style={styles.header}>
+                  <Text style={styles.title}>{item.titulo}</Text>
+                </View>
+                <View style={styles.body}>
+                  <Text style={styles.content}>{item.texto}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </Navbar>
   );
@@ -140,14 +161,14 @@ export default function Archived({ navigation }: any) {
 
 const styles = StyleSheet.create({
   div: {
-    flexDirection: "column",
-    gap: 10,
-    alignItems: "center",
+    flex: 1,
+    marginTop: 140,
   },
 
   card: {
     position: "relative",
-    display: "flex",
+    flexBasis: '42%',
+    margin: 10,    
     flexDirection: "column",
     overflow: "hidden",
     borderRadius: 12,
@@ -159,13 +180,13 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4,
+    elevation: 10,
   },
   header: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: 16,
+    padding: 15,
   },
   title: {
     fontSize: 30,
@@ -176,7 +197,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: 16,
+    padding: 15,
   },
 
   button: {
@@ -190,6 +211,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     elevation: 5,
+    zIndex: 999,
   },
 
   buttonClose: {
@@ -230,9 +252,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    top: 170,
-    maxWidth: "100%",
     flexDirection: "row",
+    fontSize: 15,
+    fontWeight: "400",
   },
 
   drawerContent: {
