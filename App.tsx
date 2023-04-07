@@ -6,6 +6,8 @@ import Login from "./src/components/login";
 import NoteCharge from "./src/components/note";
 import { AuthProvider } from "./src/content/auth";
 import Profile from "./src/components/profile";
+import Archived from "./src/components/Archived";
+import Trash from "./src/components/Trash";
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +68,40 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={Profile}
+            options={{
+              headerShown: false,
+              title: "Home",
+              headerStyle: {
+                backgroundColor: "#334155",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitleAlign: "center",
+            }}
+          />
+
+          <Stack.Screen
+            name="Archived"
+            component={Archived}
+            options={{
+              headerShown: false,
+              title: "Home",
+              headerStyle: {
+                backgroundColor: "#334155",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitleAlign: "center",
+            }}
+          />
+
+          <Stack.Screen
+            name="Trash"
+            component={Trash}
             options={{
               headerShown: false,
               title: "Home",
