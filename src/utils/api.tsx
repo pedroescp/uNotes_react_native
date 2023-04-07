@@ -49,13 +49,17 @@ const api = {
     return result.data;
   },
 
-  /*   notesUpdate: async (data: any) => {
-    const result = await axios.put("notes", data, {
-      headers,
-    });
+  notesUpdate: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.post("notes", {
+      headers: {
+        authorization,
+      },
+    });    
     return result.data;
   },
-*/
+  
+
   notesGet: async () => {
     let authorization = await getAutorization();
     const result = await axios.get("notes/obter-por-usuario", {
@@ -63,8 +67,16 @@ const api = {
         authorization,
       },
     });
-    console.log(result);
-    
+    return result.data;
+  },
+
+  notesUsuarioGet: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("notes/obter-por-usuario", {
+      headers: {
+        authorization,
+      },
+    });
     return result.data;
   },
   
@@ -75,8 +87,6 @@ const api = {
         authorization,
       },
     });
-    console.log(result);
-    
     return result.data;
   },
 
@@ -87,8 +97,6 @@ const api = {
         authorization,
       },
     });
-    console.log(result);
-    
     return result.data;
   },
 
