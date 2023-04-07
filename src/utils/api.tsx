@@ -67,6 +67,32 @@ const api = {
     
     return result.data;
   },
+  
+  arhivesGet: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("notes/obter-por-usuario-arquivado", {
+      headers: {
+        authorization,
+      },
+    });
+    console.log(result);
+    
+    return result.data;
+  },
+
+  trashGet: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("notes/obter-por-usuario-lixeira", {
+      headers: {
+        authorization,
+      },
+    });
+    console.log(result);
+    
+    return result.data;
+  },
+
+  
 };
 
 export default api;
