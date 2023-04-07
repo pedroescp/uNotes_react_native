@@ -50,7 +50,7 @@ export default function Navbar({ children, navigation }: any) {
 
       <TouchableOpacity
         style={styles.drawerIcon}
-        onPress={() => navigation.navigate("Note")}
+        onPress={() => navigation.navigate("Notes")}
       >
         <Ionicons name="create-outline" size={28} color="#c5cedd" />
 
@@ -62,12 +62,15 @@ export default function Navbar({ children, navigation }: any) {
         <Text style={styles.letterDrawe}>Documentos</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.drawerIcon}>
+      <TouchableOpacity
+        style={styles.drawerIcon}
+        onPress={() => navigation.navigate("Archived")}
+      >
         <Ionicons name="archive-outline" size={28} color="#c5cedd" />
         <Text style={styles.letterDrawe}>Arquivos</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.drawerIcon}>
+      <TouchableOpacity style={styles.drawerIcon} onPress={() => navigation.navigate("Trash")}>
         <Ionicons name="trash-outline" size={28} color="#c5cedd" />
         <Text style={styles.letterDrawe}>Lixeira</Text>
       </TouchableOpacity>
@@ -79,7 +82,9 @@ export default function Navbar({ children, navigation }: any) {
 
       <TouchableOpacity
         style={styles.profile}
-        onPress={() => {setModalVisible(true), drawer.current?.closeDrawer()}}
+        onPress={() => {
+          setModalVisible(true), drawer.current?.closeDrawer();
+        }}
       >
         <View style={styles.userIcon}>
           <Image
