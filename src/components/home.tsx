@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   Modal,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getData, removeData } from "../utils/asyncStorage";
@@ -19,6 +20,18 @@ export default function Home({ navigation }: any) {
       setUser(JSON.parse(user).data.login);
     };
     getUser();
+
+    const backAction = () => {
+      setModalVisible(true)
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   });
 
   const logout = async () => {
