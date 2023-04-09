@@ -36,7 +36,7 @@ export default function NoteCharge({ navigation }: any) {
   const getNotes = async () => {
     try {
       setNotes([]);
-      const response = await api.arhivesGet();
+      const response = await api.archivesGet();
       setNotes(response.data);
       if (!response.data || response.data.length <= 0) setShowEmpty(true);
     } catch (error) {
