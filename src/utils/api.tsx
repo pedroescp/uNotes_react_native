@@ -55,10 +55,9 @@ const api = {
       headers: {
         authorization,
       },
-    });    
+    });
     return result.data;
   },
-  
 
   notesGet: async () => {
     let authorization = await getAutorization();
@@ -79,8 +78,8 @@ const api = {
     });
     return result.data;
   },
-  
-  arhivesGet: async () => {
+
+  archivesGet: async () => {
     let authorization = await getAutorization();
     const result = await axios.get("notes/obter-por-usuario-arquivado", {
       headers: {
@@ -88,6 +87,15 @@ const api = {
       },
     });
     return result.data;
+  },
+
+  archivesDelete: async (id: any) => {
+    let authorization = await getAutorization();
+    const result = await axios.delete(`notes/arquivar?notaId=${id}`, {
+      headers: {
+        authorization,
+      },
+    });
   },
 
   trashGet: async () => {
@@ -100,7 +108,15 @@ const api = {
     return result.data;
   },
 
-  
+  trashDelete: async (id: any) => {
+    let authorization = await getAutorization();
+    const result = await axios.delete(`notes/notes?notaId=${id}`, {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
 };
 
 export default api;
