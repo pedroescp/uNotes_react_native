@@ -137,7 +137,6 @@ export default function Login() {
                   onChangeText={setEmailRegister}
                   value={emailRegister}
                   style={styles.inputTitle}
-                  secureTextEntry={false}
                 />
               </View>
 
@@ -148,7 +147,7 @@ export default function Login() {
                   onChangeText={setPasswordRegister}
                   value={passwordRegister}
                   style={styles.inputTitle}
-                  secureTextEntry={false}
+                  secureTextEntry={true}
                 />
               </View>
 
@@ -159,7 +158,7 @@ export default function Login() {
                   onChangeText={setPasswordRegisterTwo}
                   value={passwordRegisterTwo}
                   style={styles.inputTitle}
-                  secureTextEntry={false}
+                  secureTextEntry={true}
                 />
               </View>
 
