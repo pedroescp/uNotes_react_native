@@ -26,7 +26,7 @@ export default function ModalNotes({
   const [title, setTitle] = useState(titulo);
   useEffect(() => {});
   const closeNotes = async () => {
-    if (title || bodyNote) {      
+    if (title || (bodyNote && type != 3) || type != 2) {
       if (id == null) {
         try {
           const response = await api.notesPost({
@@ -43,7 +43,7 @@ export default function ModalNotes({
         } finally {
           closeResetModal();
         }
-      } else {        
+      } else {
         const response = await api.notesUpdate({
           id: id,
           titulo: title,
@@ -57,6 +57,7 @@ export default function ModalNotes({
   };
 
   const PostTrash = async () => {
+    console.log(id);
     try {
       const response = await api.trashDelete(id);
       setModalVisible(false);
@@ -128,23 +129,45 @@ export default function ModalNotes({
 
           {type != 1 && (
             <View style={styles.viewBar}>
-              {type != 3 && (
-                <TouchableOpacity>
-                  <Ionicons
-                    name="ios-trash"
-                    size={28}
-                    color="#8e8e8e"
-                    onPress={() => PostTrash()}
-                  />
-                </TouchableOpacity>
+              {type != 3 && type != 2 && (
+                <>
+                  <TouchableOpacity>
+                    <Ionicons
+                      name="ios-trash"
+                      size={28}
+                      color="#8e8e8e"
+                      onPress={() => PostTrash()}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <Ionicons
+                      name="ios-archive"
+                      size={28}
+                      color="#8e8e8e"
+                      onPress={() => PostArchive()}
+                    />
+                  </TouchableOpacity>
+                </>
               )}
-              {type != 2 && (
+              {type == 3 && (
                 <TouchableOpacity>
                   <Ionicons
-                    name="ios-archive"
+                    name="arrow-undo-outline"
                     size={28}
                     color="#8e8e8e"
                     onPress={() => PostArchive()}
+                  />
+                </TouchableOpacity>
+              )}
+
+              {type == 2 && (
+                <TouchableOpacity>
+                  <Ionicons
+                    name="arrow-undo-outline"
+                    size={28}
+                    color="#8e8e8e"
+                    onPress={() => PostTrash()}
                   />
                 </TouchableOpacity>
               )}
