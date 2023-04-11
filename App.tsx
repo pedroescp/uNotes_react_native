@@ -17,26 +17,11 @@ export default function App() {
       <AuthProvider>
         <Stack.Navigator>
           <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false,
-              title: "Login",
-              headerStyle: {
-                backgroundColor: "#334155",
-              },
-              headerTintColor: "#fff",
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
-              headerTitleAlign: "center",
-            }}
-          />
-          <Stack.Screen
             name="Home"
             component={Home}
             options={{
               headerShown: false,
+              headerLeft: () => null,
               title: "Home",
               headerStyle: {
                 backgroundColor: "#334155",
@@ -48,6 +33,7 @@ export default function App() {
               headerTitleAlign: "center",
             }}
           />
+
           <Stack.Screen
             name="Notes"
             component={NoteCharge}
@@ -105,6 +91,22 @@ export default function App() {
             options={{
               headerShown: false,
               title: "Home",
+              headerStyle: {
+                backgroundColor: "#334155",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
+              title: "Login",
               headerStyle: {
                 backgroundColor: "#334155",
               },
