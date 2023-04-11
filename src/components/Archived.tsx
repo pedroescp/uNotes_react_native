@@ -23,7 +23,10 @@ export default function NoteCharge({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setmodalType] = useState(false);
+  const [notesId, setNotesId] = useState(null);
+  const [body, setBody] = useState(null);
+  const [title, setTitle] = useState(null);
 
   useEffect(() => {
     getNotes();
@@ -31,6 +34,7 @@ export default function NoteCharge({ navigation }: any) {
 
   const getNotes = async () => {
     try {
+      setShowEmpty(false);
       setNotes([]);
       const response = await api.archivesGet();
       setNotes(response.data);
@@ -42,16 +46,30 @@ export default function NoteCharge({ navigation }: any) {
     }
   };
 
-  const openModal = async (id: any) => {
-    setModalVisible(true);
+  const openModal = async (id: any, type: any, title: any, body: any) => {
+    setNotesId(id);    
+    setmodalType(type);
+    setTitle(title);
+    setBody(body);
+    setmodalType(true);
   };
 
   return (
     <Navbar navigation={navigation}>
-    {modalVisible && <ModalNotes open={modalVisible} setOpen={setModalVisible} type={2} cargeNotes={setLoading} />}
+      {modalVisible && (
+        <ModalNotes
+          open={modalVisible}
+          setOpen={setmodalType}
+          type={2}
+          cargeNotes={setLoading}
+          id={notesId}
+          titulo={title}
+          body={body}
+        />
+      )}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => setModalVisible(true)}
+        onPress={() => setmodalType(true)}
         activeOpacity={0.7}
       >
         <Ionicons name="ios-add" size={40} color="#303030" />
@@ -64,11 +82,11 @@ export default function NoteCharge({ navigation }: any) {
             data={notes}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
-            contentContainerStyle={{padding: 16}}
+            contentContainerStyle={{ padding: 16 }}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}
-                onPress={() => openModal(item.id)}
+                onPress={() => openModal(item.id, 2, item.titulo, item.texto)}
               >
                 <View style={styles.header}>
                   <Text style={styles.title}>{item.titulo}</Text>
@@ -93,8 +111,8 @@ const styles = StyleSheet.create({
 
   card: {
     position: "relative",
-    flexBasis: '42%',
-    margin: 10,    
+    flexBasis: "42%",
+    margin: 10,
     flexDirection: "column",
     overflow: "hidden",
     borderRadius: 12,
