@@ -10,14 +10,19 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import api from "../utils/api";
 
-//type 1 = note | 2 = arquivo | 3 lixeira
+//type 1 = note | 2 = arquivo | 3 lixeira | 4 Open note
 
-export default function ModalNotes({ open, setOpen, type, cargeNotes }: any) {
+export default function ModalNotes({
+  open,
+  setOpen,
+  type,
+  cargeNotes,
+  id,
+}: any) {
   const [bodyNote, setbodyNote] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState("");
   useEffect(() => {});
-
   const closeNotes = async () => {
     if (title || bodyNote) {
       try {
@@ -28,14 +33,42 @@ export default function ModalNotes({ open, setOpen, type, cargeNotes }: any) {
           usuarioAtualizacaoId: null,
           documentoId: null,
         });
-        cargeNotes(true)
-        setModalVisible(!modalVisible);
+        cargeNotes(true);
+        setModalVisible(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        closeResetModal();
       }
     }
+  };
 
+  const PostTrash = async () => {
+    try {
+      const response = await api.trashDelete(id);
+      setModalVisible(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeResetModal();
+    }
+  };
+
+  const PostArchive = async () => {
+    try {
+      const response = await api.archivesDelete(id);
+      cargeNotes(true);
+      setModalVisible(!modalVisible);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeResetModal();
+    }
+  };
+
+  const closeResetModal = async () => {
     setOpen(false);
+    cargeNotes(true);
   };
 
   return (
@@ -78,14 +111,24 @@ export default function ModalNotes({ open, setOpen, type, cargeNotes }: any) {
 
           {type != 1 && (
             <View style={styles.viewBar}>
-              {type == 2 && (
+              {type != 3 && (
                 <TouchableOpacity>
-                  <Ionicons name="ios-trash" size={28} color="#8e8e8e" />
+                  <Ionicons
+                    name="ios-trash"
+                    size={28}
+                    color="#8e8e8e"
+                    onPress={() => PostTrash()}
+                  />
                 </TouchableOpacity>
               )}
-              {type == 3 && (
+              {type != 2 && (
                 <TouchableOpacity>
-                  <Ionicons name="ios-archive" size={28} color="#8e8e8e" />
+                  <Ionicons
+                    name="ios-archive"
+                    size={28}
+                    color="#8e8e8e"
+                    onPress={() => PostArchive()}
+                  />
                 </TouchableOpacity>
               )}
             </View>
