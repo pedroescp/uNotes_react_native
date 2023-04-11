@@ -26,7 +26,7 @@ export default function NoteCharge({ navigation }: any) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    getNotes();
+    getNotes();    
   }, [loading]);
 
   const getNotes = async () => {

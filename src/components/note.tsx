@@ -24,9 +24,11 @@ export default function NoteCharge({ navigation }: any) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setmodalType] = useState(1);
+  const [notesId, setNotesId] = useState(null)
 
   useEffect(() => {
-    getNotes();    
+    getNotes();
   }, [loading]);
 
   const getNotes = async () => {
@@ -42,17 +44,28 @@ export default function NoteCharge({ navigation }: any) {
     }
   };
 
-  const openModal = async (id: any) => {
+  const openModal = async (id: any, type: any) => {
     setModalVisible(true);
+    setmodalType(type);
+    setNotesId(id)
+    
   };
 
   return (
     <Navbar navigation={navigation}>
-      {modalVisible && <ModalNotes open={modalVisible} setOpen={setModalVisible} type={1} cargeNotes={setLoading}/>}
+      {modalVisible && (
+        <ModalNotes
+          open={modalVisible}
+          setOpen={setModalVisible}
+          type={modalType}
+          cargeNotes={setLoading}
+          id={notesId}
+        />
+      )}
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => setModalVisible(true)}
+        onPress={() => openModal(null, 1)}
         activeOpacity={0.7}
       >
         <Ionicons name="ios-add" size={40} color="#303030" />
@@ -69,7 +82,7 @@ export default function NoteCharge({ navigation }: any) {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}
-                onPress={() => openModal(item.id)}
+                onPress={() => openModal(item.id, 4)}
               >
                 <View style={styles.header}>
                   <Text style={styles.title}>{item.titulo}</Text>
