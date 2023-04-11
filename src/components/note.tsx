@@ -5,14 +5,13 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Modal,
-  TextInput,
   FlatList,
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
 import Loading from "./Loading";
 import Empty from "./Empty";
+import ModalNotes from "./modal";
 
 export default function NoteCharge({ navigation }: any) {
   interface Note {
@@ -25,13 +24,10 @@ export default function NoteCharge({ navigation }: any) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [bodyNote, setbodyNote] = useState("");
-  const [title, setTitle] = useState("");
-  const _editor = React.createRef();
 
   useEffect(() => {
-    getNotes();
-  }, []);
+    getNotes();    
+  }, [loading]);
 
   const getNotes = async () => {
     try {
@@ -52,77 +48,8 @@ export default function NoteCharge({ navigation }: any) {
 
   return (
     <Navbar navigation={navigation}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        style={styles.modalBody}
-        visible={modalVisible}
-        onRequestClose={async () => {
-          if (title || bodyNote) {
-            try {
-              const response = await api.notesPost({
-                titulo: title,
-                texto: bodyNote,
-                criadorId: null,
-                usuarioAtualizacaoId: null,
-                documentoId: null,
-              });
-              getNotes();
-              setModalVisible(!modalVisible);
-            } catch (error) {
-              console.log(error);
-            }
-          }
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TextInput
-              placeholder={"Titulo"}
-              placeholderTextColor={"#9ea1a6"}
-              value={title}
-              onChangeText={setTitle}
-              style={styles.inputTitle}
-            />
+      {modalVisible && <ModalNotes open={modalVisible} setOpen={setModalVisible} type={1} cargeNotes={setLoading}/>}
 
-            <TextInput
-              placeholder={"Escreva uma nota"}
-              multiline={true}
-              numberOfLines={4}
-              value={bodyNote}
-              onChangeText={setbodyNote}
-              placeholderTextColor={"#9ea1a6"}
-              style={styles.inputBody}
-            />
-            {/*             <SafeAreaView style={styles.root}>
-              <StatusBar style="auto" />
-              <QuillEditor
-                autoSize
-                style={styles.QuillEditor}
-                ref={_editor}
-                initialHtml="<h1>Quill Editor for react-native</h1>"
-              />
-              <QuillToolbar
-                editor={_editor}
-                style={styles.QuillToolbar}
-                options="full"
-                theme="light"
-              />
-            </SafeAreaView> */}
-            {
-              <View style={styles.viewBar}>
-                <TouchableOpacity>
-                  <Ionicons name="ios-trash" size={28} color="#8e8e8e" />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Ionicons name="ios-archive" size={28} color="#8e8e8e" />
-                </TouchableOpacity>
-              </View>
-            }
-          </View>
-        </View>
-      </Modal>
       <TouchableOpacity
         style={styles.button}
         onPress={() => setModalVisible(true)}
@@ -138,7 +65,7 @@ export default function NoteCharge({ navigation }: any) {
             data={notes}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
-            contentContainerStyle={{padding: 16}}
+            contentContainerStyle={{ padding: 16 }}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}
@@ -167,8 +94,8 @@ const styles = StyleSheet.create({
 
   card: {
     position: "relative",
-    flexBasis: '42%',
-    margin: 10,    
+    flexBasis: "42%",
+    margin: 10,
     flexDirection: "column",
     overflow: "hidden",
     borderRadius: 12,
