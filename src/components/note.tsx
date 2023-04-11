@@ -25,7 +25,9 @@ export default function NoteCharge({ navigation }: any) {
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setmodalType] = useState(1);
-  const [notesId, setNotesId] = useState(null)
+  const [notesId, setNotesId] = useState(null);
+  const [body, setBody] = useState(null);
+  const [title, setTitle] = useState(null);
 
   useEffect(() => {
     getNotes();
@@ -33,6 +35,7 @@ export default function NoteCharge({ navigation }: any) {
 
   const getNotes = async () => {
     try {
+      setShowEmpty(false)
       setNotes([]);
       const response = await api.notesGet();
       setNotes(response.data);
@@ -44,11 +47,12 @@ export default function NoteCharge({ navigation }: any) {
     }
   };
 
-  const openModal = async (id: any, type: any) => {
-    setModalVisible(true);
+  const openModal = async (id: any, type: any, title: any, body: any) => {
+    setNotesId(id);
     setmodalType(type);
-    setNotesId(id)
-    
+    setTitle(title);
+    setBody(body);
+    setModalVisible(true);
   };
 
   return (
@@ -60,12 +64,14 @@ export default function NoteCharge({ navigation }: any) {
           type={modalType}
           cargeNotes={setLoading}
           id={notesId}
+          titulo={title}
+          body={body}
         />
       )}
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => openModal(null, 1)}
+        onPress={() => openModal(null, 1, null, null)}
         activeOpacity={0.7}
       >
         <Ionicons name="ios-add" size={40} color="#303030" />
@@ -82,7 +88,7 @@ export default function NoteCharge({ navigation }: any) {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}
-                onPress={() => openModal(item.id, 4)}
+                onPress={() => openModal(item.id, 4, item.titulo, item.texto)}
               >
                 <View style={styles.header}>
                   <Text style={styles.title}>{item.titulo}</Text>
