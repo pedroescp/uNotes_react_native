@@ -83,12 +83,16 @@ export default function ModalNotes({
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TouchableOpacity
-            style={{ marginTop: 110 }}
-            onPress={() => closeNotes()}
+          <View
+            style={{ display: "flex", alignItems: "flex-start", width: "100%" }}
           >
-            <Ionicons name="arrow-back" size={40} color="#c5cedd" />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 110 }}
+              onPress={() => closeNotes()}
+            >
+              <Ionicons name="arrow-back" size={40} color="#c5cedd" />
+            </TouchableOpacity>
+          </View>
 
           <TextInput
             placeholder={"Titulo"}
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -185,10 +189,9 @@ const styles = StyleSheet.create({
   viewBar: {
     backgroundColor: "#f3f3f3",
     position: "absolute",
-    bottom: 10,
-    padding: 0,
-    borderRadius: 10,
+    bottom: 0,
     height: 50,
+    borderRadius: 10,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
