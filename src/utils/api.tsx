@@ -49,9 +49,12 @@ const api = {
     return result.data;
   },
 
-  notesUpdate: async () => {
+  notesUpdate: async (data: any) => {
     let authorization = await getAutorization();
-    const result = await axios.post("notes", {
+    const result = await axios({
+      method: "PUT",
+      data: data,
+      url: "notes",
       headers: {
         authorization,
       },

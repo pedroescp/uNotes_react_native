@@ -24,13 +24,18 @@ export default function NoteCharge({ navigation }: any) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [notesId, setNotesId] = useState(null);
+  const [modalType, setmodalType] = useState(3);
+  const [body, setBody] = useState(null);
+  const [title, setTitle] = useState(null);
 
   useEffect(() => {
-    getNotes();    
+    getNotes();
   }, [loading]);
 
   const getNotes = async () => {
     try {
+      setShowEmpty(false);
       setNotes([]);
       const response = await api.trashGet();
       setNotes(response.data);
@@ -42,13 +47,27 @@ export default function NoteCharge({ navigation }: any) {
     }
   };
 
-  const openModal = async (id: any) => {
+  const openModal = async (id: any, type: any, title: any, body: any) => {
+    setNotesId(id);
+    setmodalType(type);
+    setTitle(title);
+    setBody(body);
     setModalVisible(true);
   };
 
   return (
     <Navbar navigation={navigation}>
-      {modalVisible && <ModalNotes open={modalVisible} setOpen={setModalVisible} type={3} cargeNotes={setLoading} />}
+      {modalVisible && (
+        <ModalNotes
+          open={modalVisible}
+          setOpen={setModalVisible}
+          type={3}
+          cargeNotes={setLoading}
+          id={notesId}
+          titulo={title}
+          body={body}
+        />
+      )}
       <TouchableOpacity
         style={styles.button}
         onPress={() => setModalVisible(true)}
@@ -64,11 +83,11 @@ export default function NoteCharge({ navigation }: any) {
             data={notes}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
-            contentContainerStyle={{padding: 16}}
+            contentContainerStyle={{ padding: 16 }}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.card}
-                onPress={() => openModal(item.id)}
+                onPress={() => openModal(item.id, 3, item.titulo, item.texto)}
               >
                 <View style={styles.header}>
                   <Text style={styles.title}>{item.titulo}</Text>
@@ -93,8 +112,8 @@ const styles = StyleSheet.create({
 
   card: {
     position: "relative",
-    flexBasis: '42%',
-    margin: 10,    
+    flexBasis: "42%",
+    margin: 10,
     flexDirection: "column",
     overflow: "hidden",
     borderRadius: 12,
