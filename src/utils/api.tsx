@@ -110,7 +110,7 @@ const api = {
 
   trashDelete: async (id: any) => {
     let authorization = await getAutorization();
-    const result = await axios.delete(`notes/notes?notaId=${id}`, {
+    const result = await axios.delete(`notes?notaId=${id}`, {
       headers: {
         authorization,
       },
