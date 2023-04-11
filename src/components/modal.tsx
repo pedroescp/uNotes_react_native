@@ -18,28 +18,41 @@ export default function ModalNotes({
   type,
   cargeNotes,
   id,
+  titulo,
+  body,
 }: any) {
-  const [bodyNote, setbodyNote] = useState("");
+  const [bodyNote, setbodyNote] = useState(body);
   const [modalVisible, setModalVisible] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(titulo);
   useEffect(() => {});
   const closeNotes = async () => {
-    if (title || bodyNote) {
-      try {
-        const response = await api.notesPost({
+    if (title || bodyNote) {      
+      if (id == null) {
+        try {
+          const response = await api.notesPost({
+            titulo: title,
+            texto: bodyNote,
+            criadorId: null,
+            usuarioAtualizacaoId: null,
+            documentoId: null,
+          });
+          cargeNotes(true);
+          setModalVisible(false);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          closeResetModal();
+        }
+      } else {        
+        const response = await api.notesUpdate({
+          id: id,
           titulo: title,
           texto: bodyNote,
-          criadorId: null,
-          usuarioAtualizacaoId: null,
-          documentoId: null,
         });
-        cargeNotes(true);
-        setModalVisible(false);
-      } catch (error) {
-        console.log(error);
-      } finally {
         closeResetModal();
       }
+    } else {
+      closeResetModal();
     }
   };
 
