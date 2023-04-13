@@ -38,6 +38,16 @@ const api = {
     return result.data;
   },
 
+  usuarioByIdGet: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("usuario/obter-por-id", {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
   notesPost: async (data: any) => {
     let authorization = await getAutorization();
 
