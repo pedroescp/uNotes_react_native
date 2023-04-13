@@ -17,7 +17,11 @@ export default function Home({ navigation }: any) {
   useEffect(() => {
     const getUser = async () => {
       let user = await getData("user");
-      setUser(JSON.parse(user).data.login);
+      if (!user) {
+        navigation.navigate("Login");
+      } else {
+        setUser(JSON.parse(user).data.login);
+      }
     };
     getUser();
   });
@@ -57,7 +61,7 @@ export default function Home({ navigation }: any) {
       >
         <View style={styles.userIcon}>
           <Image
-            source={{ uri: "https://picsum.photos/200" }}
+            source={require('../icons/profile.jpg')}
             style={styles.icon}
           />
         </View>
