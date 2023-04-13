@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     height: `100%`,
     display: "flex",
     gap: 20,
-    padding: 0,
+    padding: 16,
   },
   navigationContainer: {
     backgroundColor: "#334155",
