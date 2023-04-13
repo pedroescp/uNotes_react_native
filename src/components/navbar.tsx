@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   navbar: {
     position: "absolute",
-    top: 70,
+    top: 40,
     left: 40,
     right: 40,
     height: 60,
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     height: `100%`,
     display: "flex",
     gap: 20,
-    padding: 16,
+    padding: 0,
   },
   navigationContainer: {
     backgroundColor: "#334155",
