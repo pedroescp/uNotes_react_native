@@ -24,7 +24,6 @@ export default function ModalNotes({
   const [bodyNote, setbodyNote] = useState(body);
   const [modalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState(titulo);
-  useEffect(() => {});
   const closeNotes = async () => {
     if (title || (bodyNote && type != 3) || type != 2) {
       if (id == null) {
