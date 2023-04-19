@@ -5,37 +5,79 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
+  Modal,
+  Keyboard,
+  ScrollView,
+  Animated,
+  TextInput,
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
 import Loading from "./Loading";
-import Empty from "./Empty";
-import Modalprofile from "./modal";
 import { Image } from "react-native-elements";
+import Input from "./Input";
 
 export default function NoteCharge({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setmodalType] = useState(1);
-  const [profileId, setProfileId] = useState(null);
-  const [body, setBody] = useState(null);
-  const [title, setTitle] = useState(null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [buttonOpacity, setButtonOpacity] = useState(new Animated.Value(1));
+
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [cargo, setCargo] = useState("");
+  const [nome, setNome] = useState("");
+  const [id, setId] = useState("");
 
   useEffect(() => {
     getprofile();
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+        Animated.timing(buttonOpacity, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+        Animated.timing(buttonOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, [loading]);
 
-  const getprofile = async () => {
+  const updateProfile = async () => {
     try {
-      setShowEmpty(false);
-      setProfile([]);
-      const response = await api.usuarioByIdGet();
-      setProfile(response.data);
+      resetPage();
+      const response = await api.usuarioPut({
+        id: id,
+        login: login,
+        nome: nome,
+        email: email,
+        telefone: telefone,
+        cargoId: "5697c024-c2df-4651-b0da-732fe3a93975",
+      });
+     
       if (!response.data || response.data.length <= 0) setShowEmpty(true);
-      console.log(response.data);
+      setProfile(response.data);
+      resetPage()      
     } catch (error) {
       console.error(error);
     } finally {
@@ -43,17 +85,103 @@ export default function NoteCharge({ navigation }: any) {
     }
   };
 
-  const openModal = async (id: any, type: any, title: any, body: any) => {
-    setProfileId(id);
-    setmodalType(type);
-    setTitle(title);
-    setBody(body);
-    setModalVisible(true);
+  const getprofile = async () => {
+    try {
+      resetPage();
+      const response = await api.usuarioByIdGet();
+      setProfile(response.data);
+      if (!response.data || response.data.length <= 0) setShowEmpty(true);
+      setLogin(response.data.login);
+      setId(response.data.id);
+      setEmail(response.data.email);
+      setNome(response.data.nome);
+      setTelefone(response.data.telefone);
+      setCargo(response.data.cargoId)
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const resetPage = async () => {
+    setShowEmpty(false);
+    setProfile([]);
+  };
   return (
     <Navbar navigation={navigation}>
       {loading && <Loading />}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={async () => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{ position: "absolute", left: 15, top: 15 }}
+            >
+              <Ionicons name="arrow-back" size={40} color="#c5cedd" />
+            </TouchableOpacity>
+            <ScrollView
+              style={{
+                flex: 1,
+                width: "100%",
+                marginTop: 50,
+                marginBottom: 70,
+              }}
+              showsVerticalScrollIndicator={false}
+            >
+              <Input
+                register={nome}
+                placeholder={"Nome"}
+                setRegister={setNome}
+              />
+
+              <Input
+                register={login}
+                placeholder={"Login"}
+                setRegister={setLogin}
+              />
+              <Input
+                register={email}
+                placeholder={"Email"}
+                setRegister={setEmail}
+              />
+              <Input
+                register={telefone}
+                placeholder={"Telefone"}
+                setRegister={setTelefone}
+              />
+              <Input
+                register={cargo}
+                placeholder={"Cargo"}
+                setRegister={setCargo}
+              />
+            </ScrollView>
+          </View>
+          <Animated.View
+            style={{
+              opacity: buttonOpacity,
+              position: "absolute",
+              bottom: 20,
+              width: "80%",
+            }}
+          >
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => updateProfile()}
+            >
+              <Text style={{ fontSize: 25 }}>Salvar</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </Modal>
       <View style={styles.div}>
         {!loading && (
           <>
@@ -65,8 +193,8 @@ export default function NoteCharge({ navigation }: any) {
               }}
             >
               <Image
-              source={require('../icons/profile.jpg')}
-              style={styles.icon}
+                source={require("../icons/profile.jpg")}
+                style={styles.icon}
               />
             </View>
 
@@ -85,10 +213,8 @@ export default function NoteCharge({ navigation }: any) {
                   gap: 15,
                 }}
               >
-                <Text style={{ fontSize: 80, color: "#f6f7f8" }}>
-                  {profile.nome}
-                </Text>
-                <TouchableOpacity>
+                <Text style={{ fontSize: 80, color: "#f6f7f8" }}>{nome}</Text>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
                   <Ionicons
                     name="ios-pencil-outline"
                     size={25}
@@ -113,6 +239,7 @@ export default function NoteCharge({ navigation }: any) {
                 style={{
                   display: "flex",
                   flexDirection: "row",
+                  justifyContent: "center",
                   alignItems: "center",
                   gap: 15,
                 }}
@@ -174,12 +301,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    position: "absolute",
-    bottom: 35,
-    right: 20,
-    width: 70,
     height: 70,
-    borderRadius: 50,
+    borderRadius: 10,
     backgroundColor: "#f28c18",
     alignItems: "center",
     justifyContent: "center",
@@ -275,56 +398,38 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-
   modalView: {
-    margin: 20,
+    alignItems: "flex-start",
     backgroundColor: "#334255",
-    borderRadius: 20,
     padding: 20,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 10,
-      height: 10,
-    },
-    shadowOpacity: 1.25,
-    shadowRadius: 20,
-    elevation: 90,
     width: "100%",
     height: "100%",
   },
 
   centeredView: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
   },
 
-  modalBody: {
-    backgroundColor: "#334155",
-    elevation: 5,
+  view: {
+    width: "100%",
+    marginBottom: 20,
   },
 
-  QuillEditor: {
-    width: 500,
-    padding: 0,
-    maxWidth: `100%`,
-    backgroundColor: "#262b36",
+  input: {
+    borderWidth: 1,
+    borderColor: "gray",
+    width: "100%",
+    height: 70,
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 30,
+    fontWeight: "500",
+    color: "#b6c4dd",
   },
 
-  QuillToolbar: {
-    position: "absolute",
-    flex: 1,
-  },
-
-  root: {
-    flex: 1,
+  text: {
+    fontSize: 25,
+    marginBottom: 10,
+    color: "#f6f7f8",
   },
 });
