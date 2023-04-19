@@ -57,7 +57,10 @@ export default function Navbar({ children, navigation }: any) {
         <Text style={styles.letterDrawe}>Notas</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.drawerIcon}>
+      <TouchableOpacity
+        style={styles.drawerIcon}
+        onPress={() => navigation.navigate("Document")}
+      >
         <Ionicons name="document-text-outline" size={28} color="#c5cedd" />
         <Text style={styles.letterDrawe}>Documentos</Text>
       </TouchableOpacity>
@@ -70,7 +73,10 @@ export default function Navbar({ children, navigation }: any) {
         <Text style={styles.letterDrawe}>Arquivos</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.drawerIcon} onPress={() => navigation.navigate("Trash")}>
+      <TouchableOpacity
+        style={styles.drawerIcon}
+        onPress={() => navigation.navigate("Trash")}
+      >
         <Ionicons name="trash-outline" size={28} color="#c5cedd" />
         <Text style={styles.letterDrawe}>Lixeira</Text>
       </TouchableOpacity>
