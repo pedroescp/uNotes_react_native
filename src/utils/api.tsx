@@ -48,6 +48,20 @@ const api = {
     return result.data;
   },
 
+
+  usuarioPut: async (data: any) => {
+    console.log(data);
+    
+    let authorization = await getAutorization();
+      const request = await axios({
+        method: "PUT",
+        headers: {authorization},
+        data: data,
+        url: "usuario",
+      });
+    return request.data;
+  },  
+
   notesPost: async (data: any) => {
     let authorization = await getAutorization();
 
