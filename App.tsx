@@ -8,6 +8,7 @@ import { AuthProvider } from "./src/content/auth";
 import Profile from "./src/components/profile";
 import Archived from "./src/components/Archived";
 import Trash from "./src/components/Trash";
+import Document from "./src/components/document";
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,22 @@ export default function App() {
             }}
           />
 
+          <Stack.Screen
+            name="Document"
+            component={Document}
+            options={{
+              headerShown: false,
+              title: "Home",
+              headerStyle: {
+                backgroundColor: "#334155",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitleAlign: "center",
+            }}
+          />
           <Stack.Screen
             name="Trash"
             component={Trash}
