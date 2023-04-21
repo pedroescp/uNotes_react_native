@@ -162,6 +162,7 @@ export default function Login() {
                 style={styles.button}
                 onPress={handleRegister}
                 activeOpacity={0.7}
+                
               >
                 <Text style={styles.buttonEnter}>REGISTRAR E ENTRAR !</Text>
               </TouchableOpacity>
