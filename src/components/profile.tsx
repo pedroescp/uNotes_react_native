@@ -66,6 +66,9 @@ export default function NoteCharge({ navigation }: any) {
   const updateProfile = async () => {
     try {
       resetPage();
+      if (id || login || nome || email || telefone ) {
+        alert("Nao pode deixar campo vazio")
+      } else {
       const response = await api.usuarioPut({
         id: id,
         login: login,
@@ -77,7 +80,8 @@ export default function NoteCharge({ navigation }: any) {
      
       if (!response.data || response.data.length <= 0) setShowEmpty(true);
       setProfile(response.data);
-      resetPage()      
+      resetPage()
+    }      
     } catch (error) {
       console.error(error);
     } finally {
@@ -213,7 +217,7 @@ export default function NoteCharge({ navigation }: any) {
                   gap: 15,
                 }}
               >
-                <Text style={{ fontSize: 80, color: "#f6f7f8" }}>{nome}</Text>
+                <Text style={{ fontSize: 30, color: "#f6f7f8" }}>{nome}</Text>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                   <Ionicons
                     name="ios-pencil-outline"
