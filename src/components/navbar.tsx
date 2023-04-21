@@ -182,8 +182,8 @@ export default function Navbar({ children, navigation }: any) {
                     fontSize: 25,
                     color: "#9ea1a6",
                     position: "absolute",
-                    top: 25,
-                    left: 45,
+                    top: `15%`,
+                    left: `5%`,
                     fontWeight: "bold",
                   },
                 ]}
@@ -211,10 +211,10 @@ export default function Navbar({ children, navigation }: any) {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.Button, { backgroundColor: "#f87272" }]}
+                  style={[styles.Button, { backgroundColor: "#f87272"}]}
                   onPress={() => logout()}
                 >
-                  <Text style={[styles.TextButtonModal, { color: "#470000" }]}>
+                  <Text style={[styles.TextButtonModal, { color: "#470000", fontSize: 19  }]}>
                     Desconectar
                   </Text>
                 </TouchableOpacity>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
 
   viewBar: {
     position: "absolute",
-    bottom: 25,
+    bottom: 15,
     padding: 0,
     borderRadius: 10,
     height: 50,
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 90,
     width: "90%",
-    height: "30%",
+    height: "35%",
   },
 
   centeredView: {
