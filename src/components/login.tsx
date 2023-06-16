@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Alert } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Alert, BackHandler } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { NavigationContext } from "@react-navigation/native";
+import { NavigationContext, useFocusEffect  } from "@react-navigation/native";
 import { AuthContext } from "../content/auth";
 import { AuthProvider } from "../content/auth";
 import { getData, removeData } from "../utils/asyncStorage";
@@ -27,6 +27,25 @@ export default function Login() {
   const [passwordRegister, setPasswordRegister] = useState("");
   const [passwordRegisterTwo, setPasswordRegisterTwo] = useState("");
   const [disabledCamps, setDisabledCamps] = useState(false)
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Aqui você pode exibir uma mensagem de aviso ou executar outra ação, se desejar.
+        return true; // Retorna "true" para desabilitar o comportamento de voltar.
+      };
+  
+      // Adicione um listener para interceptar o evento de voltar.
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+      // Remova o listener quando a tela perder o foco.
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+  
+
 
   useEffect(() => {
     const getUser = async () => {

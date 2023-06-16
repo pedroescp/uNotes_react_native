@@ -20,11 +20,9 @@ export default function Home({ navigation }: any) {
   }, []);
 
   const getUser = async () => {
-
-
     try {
       const response = await api.usuarioByIdGet();
-      setUser(response.data['nome']);      
+      setUser(response.data['nome']);
 
     } catch (error: any) {
       console.error(error);
