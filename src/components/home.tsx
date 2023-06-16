@@ -9,22 +9,36 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getData, removeData } from "../utils/asyncStorage";
+import api from "../utils/api";
 
 export default function Home({ navigation }: any) {
   const [user, setUser] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    const getUser = async () => {
-      let user = await getData("user");
-      if (!user) {
-        navigation.navigate("Login");
-      } else {
-        setUser(JSON.parse(user).data.login);
-      }
-    };
     getUser();
-  });
+  }, []);
+
+  const getUser = async () => {
+
+
+    try {
+      const response = await api.usuarioByIdGet();
+      setUser(response.data['nome']);      
+
+    } catch (error: any) {
+      console.error(error);
+      if (error.response.status == 401) logout()
+    }
+
+    let user = await getData("user");
+    if (!user) {
+      navigation.navigate("Login");
+    } else {
+      setUser(JSON.parse(user).data.login);
+    }
+
+  };
 
   const logout = async () => {
     removeData("user");

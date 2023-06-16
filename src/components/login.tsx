@@ -6,6 +6,8 @@ import { AuthContext } from "../content/auth";
 import { AuthProvider } from "../content/auth";
 import { getData, removeData } from "../utils/asyncStorage";
 import api from "../utils/api";
+import Loading from "./Loading";
+
 
 export default function Login() {
   const { login }: any = useContext(AuthContext);
@@ -17,11 +19,14 @@ export default function Login() {
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   //register
   const [usuarioRegister, setUsuarioRegister] = useState("");
   const [emailRegister, setEmailRegister] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
   const [passwordRegisterTwo, setPasswordRegisterTwo] = useState("");
+  const [disabledCamps, setDisabledCamps] = useState(false)
 
   useEffect(() => {
     const getUser = async () => {
@@ -34,7 +39,15 @@ export default function Login() {
   async function handleLogin() {
     if (emailLogin == "" || passwordLogin == "")
       alert("Login e/ou senha nao devem estar em branco");
-    else login(emailLogin, passwordLogin, navigation);
+    else {
+      setLoading(true)
+      setDisabledCamps(true)
+      var response = await login(emailLogin, passwordLogin, navigation);
+      if (!response) {
+        setLoading(false)
+        setDisabledCamps(false)
+      }
+    }
   }
 
   async function handleRegister() {
@@ -45,31 +58,39 @@ export default function Login() {
       passwordRegisterTwo == ""
     ) {
       alert("Prencha os campos corretamente !");
-    } else {
-      if (passwordRegister == passwordRegisterTwo) {
-        const registroData = {
-          login: usuarioRegister,
-          nome: usuarioRegister,
-          email: emailRegister,
-          senha: passwordRegister,
-          telefone: null,
-        };
+    } else if (passwordRegister == passwordRegisterTwo) {
+      const registroData = {
+        login: usuarioRegister,
+        nome: usuarioRegister,
+        email: emailRegister,
+        senha: passwordRegister,
+        telefone: null,
+      };
 
-        api.usuarioRegister(registroData).then((res) => {
-          if (res && res.status === 201) {
-            login(usuarioRegister, passwordRegister, navigation);
-          }
-        });
-      } else {
-        alert("As senhas devem ser iguais !");
-      }
+      setLoading(true)
+
+      api.usuarioRegister(registroData).then((res) => {
+        if (res && res.status === 201) {
+          login(usuarioRegister, passwordRegister, navigation);
+        } else {
+          setDisabledCamps(false)
+          setLoading(false)
+          alert("Algo inesperado aconteceu.");
+        }
+      });
+    } else {
+      alert("As senhas devem ser iguais !");
     }
   }
 
   return (
     <AuthProvider>
       <View style={styles.container}>
+
+        {loading && <Loading />}
+
         <View style={{ ...styles.card, height: showRegister ? 600 : 500 }}>
+          {loading && <Loading />}
           {!showRegister && (
             <>
               <TouchableOpacity
@@ -85,6 +106,7 @@ export default function Login() {
                 <View style={styles.divider}></View>
                 <Text style={styles.labels}>Usuario/E-email</Text>
                 <TextInput
+
                   placeholderTextColor={"#9ea1a6"}
                   value={emailLogin}
                   onChangeText={setEmailLogin}
@@ -103,10 +125,12 @@ export default function Login() {
               </View>
 
               <TouchableOpacity
+                disabled={disabledCamps}
                 style={styles.button}
                 onPress={handleLogin}
                 activeOpacity={0.7}
               >
+
                 <Text style={styles.buttonEnter}>Entrar</Text>
               </TouchableOpacity>
             </>
@@ -162,7 +186,7 @@ export default function Login() {
                 style={styles.button}
                 onPress={handleRegister}
                 activeOpacity={0.7}
-                
+
               >
                 <Text style={styles.buttonEnter}>REGISTRAR E ENTRAR !</Text>
               </TouchableOpacity>

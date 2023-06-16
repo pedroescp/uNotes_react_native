@@ -144,6 +144,28 @@ const api = {
     });
     return result.data;
   },
+
+  getAllCategorias: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("categoria", {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
+  getAllDocumentos: async () => {
+    let authorization = await getAutorization();
+    const result = await axios.get("documentos", {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
+
 };
 
 export default api;

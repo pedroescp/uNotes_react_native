@@ -66,22 +66,22 @@ export default function NoteCharge({ navigation }: any) {
   const updateProfile = async () => {
     try {
       resetPage();
-      if (id || login || nome || email || telefone ) {
+      if (id || login || nome || email || telefone) {
         alert("Nao pode deixar campo vazio")
       } else {
-      const response = await api.usuarioPut({
-        id: id,
-        login: login,
-        nome: nome,
-        email: email,
-        telefone: telefone,
-        cargoId: "5697c024-c2df-4651-b0da-732fe3a93975",
-      });
-     
-      if (!response.data || response.data.length <= 0) setShowEmpty(true);
-      setProfile(response.data);
-      resetPage()
-    }      
+        const response = await api.usuarioPut({
+          id: id,
+          login: login,
+          nome: nome,
+          email: email,
+          telefone: telefone,
+          cargoId: "5697c024-c2df-4651-b0da-732fe3a93975",
+        });
+
+        if (!response.data || response.data.length <= 0) setShowEmpty(true);
+        setProfile(response.data);
+        resetPage()
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -251,9 +251,6 @@ export default function NoteCharge({ navigation }: any) {
                 <Text style={{ fontSize: 30, color: "#f6f7f8" }}>
                   Categorias
                 </Text>
-                <TouchableOpacity>
-                  <Ionicons name="ios-add-circle" size={25} color="#c5cedd" />
-                </TouchableOpacity>
               </View>
             </View>
           </>

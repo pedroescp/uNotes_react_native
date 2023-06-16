@@ -12,13 +12,10 @@ export default function AppContent() {
   const Private = ({ children, navigation }: any) => {
     const { authenticated, loading }: any = useContext(AuthContext);
 
-    if (loading) {
-      return <div className="loading">Carregando...</div>;
-    }
+    if (loading) return <div className="loading">Carregando...</div>;
 
-    if (!authenticated) {
-      return navigation.navegate("Home");
-    }
+    if (!authenticated) navigation.navegate("Home"); 
+
     return children;
   };
 

@@ -12,6 +12,7 @@ import Navbar from "./navbar";
 import Loading from "./Loading";
 import Empty from "./Empty";
 import ModalNotes from "./modal";
+import { removeData } from "../utils/asyncStorage";
 
 export default function NoteCharge({ navigation }: any) {
   interface Note {
@@ -40,12 +41,21 @@ export default function NoteCharge({ navigation }: any) {
       const response = await api.notesGet();
       setNotes(response.data);
       if (!response.data || response.data.length <= 0) setShowEmpty(true);
-    } catch (error) {
+      
+    } catch (error: any) {
       console.error(error);
+      if (error.response.status == 401) logout()
     } finally {
       setLoading(false);
     }
   };
+
+  const logout = async () => {
+    removeData("user");
+    removeData("token");
+
+    navigation.navigate("Login");
+};
 
   const openModal = async (id: any, type: any, title: any, body: any) => {
     setNotesId(id);
