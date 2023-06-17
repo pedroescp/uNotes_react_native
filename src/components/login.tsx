@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, TouchableOpacity, Text, Alert, BackHandler } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { NavigationContext, useFocusEffect  } from "@react-navigation/native";
+import { NavigationContext, useFocusEffect } from "@react-navigation/native";
 import { AuthContext } from "../content/auth";
 import { AuthProvider } from "../content/auth";
 import { getData, removeData } from "../utils/asyncStorage";
 import api from "../utils/api";
 import Loading from "./Loading";
+import { Ionicons } from "@expo/vector-icons";
 
 
 export default function Login() {
@@ -27,6 +28,8 @@ export default function Login() {
   const [passwordRegister, setPasswordRegister] = useState("");
   const [passwordRegisterTwo, setPasswordRegisterTwo] = useState("");
   const [disabledCamps, setDisabledCamps] = useState(false)
+  const [loginEye, setLoginEye] = useState(true)
+  const [registerEye, setRegisterEye] = useState(true)
 
 
   useFocusEffect(
@@ -35,16 +38,16 @@ export default function Login() {
         // Aqui você pode exibir uma mensagem de aviso ou executar outra ação, se desejar.
         return true; // Retorna "true" para desabilitar o comportamento de voltar.
       };
-  
+
       // Adicione um listener para interceptar o evento de voltar.
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  
+
       // Remova o listener quando a tela perder o foco.
       return () =>
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
-  
+
 
 
   useEffect(() => {
@@ -67,6 +70,14 @@ export default function Login() {
         setDisabledCamps(false)
       }
     }
+  }
+
+  function loginPasswordEye() {
+    loginEye == true ? setLoginEye(false) : setLoginEye(true)
+  }
+
+  function registerPasswordEye() {
+    registerEye == true ? setRegisterEye(false) : setRegisterEye(true)
   }
 
   async function handleRegister() {
@@ -134,13 +145,30 @@ export default function Login() {
               </View>
               <View>
                 <Text style={styles.labels}>Senha</Text>
+
                 <TextInput
                   placeholderTextColor={"#9ea1a6"}
                   value={passwordLogin}
                   onChangeText={setPasswordLogin}
                   style={styles.inputTitle}
-                  secureTextEntry={true}
+                  secureTextEntry={loginEye}
                 />
+
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 20, bottom: 27, elevation: 99 }}
+                  activeOpacity={0.7}
+                  onPress={() => loginPasswordEye()}
+                >
+
+                  {loginEye &&
+                    <Ionicons name="eye-off-outline" size={20} color="#f4f4f4" />
+                  }
+
+                  {!loginEye &&
+                    <Ionicons name="eye-outline" size={20} color="#f4f4f4" />
+                  }
+
+                </TouchableOpacity>
               </View>
 
               <TouchableOpacity
@@ -186,8 +214,22 @@ export default function Login() {
                   onChangeText={setPasswordRegister}
                   value={passwordRegister}
                   style={styles.inputTitle}
-                  secureTextEntry={true}
+                  secureTextEntry={registerEye}
                 />
+
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 20, bottom: 27, elevation: 99 }}
+                  activeOpacity={0.7}
+                  onPress={() => registerPasswordEye()}
+                >
+                  {registerEye &&
+                    <Ionicons name="eye-off-outline" size={20} color="#f4f4f4" />
+                  }
+
+                  {!registerEye &&
+                    <Ionicons name="eye-outline" size={20} color="#f4f4f4" />
+                  }
+                </TouchableOpacity>
               </View>
 
               <View>
@@ -197,8 +239,21 @@ export default function Login() {
                   onChangeText={setPasswordRegisterTwo}
                   value={passwordRegisterTwo}
                   style={styles.inputTitle}
-                  secureTextEntry={true}
+                  secureTextEntry={registerEye}
                 />
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 20, bottom: 27, elevation: 99 }}
+                  activeOpacity={0.7}
+                  onPress={() => registerPasswordEye()}
+                >
+                  {registerEye &&
+                    <Ionicons name="eye-off-outline" size={20} color="#f4f4f4" />
+                  }
+
+                  {!registerEye &&
+                    <Ionicons name="eye-outline" size={20} color="#f4f4f4" />
+                  }
+                </TouchableOpacity>
               </View>
 
               <TouchableOpacity

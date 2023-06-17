@@ -17,7 +17,7 @@ export default function Home({ navigation }: any) {
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [user]);
 
   const getUser = async () => {
     try {
