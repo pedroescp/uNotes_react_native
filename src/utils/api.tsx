@@ -155,6 +155,18 @@ const api = {
     return result.data;
   },
 
+  postCategorias: async (data: any) => {
+    let authorization = await getAutorization();
+
+    const result = await axios.post("categoria", data, {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
+
   getAllDocumentos: async () => {
     let authorization = await getAutorization();
     const result = await axios.get("documentos", {
