@@ -25,7 +25,11 @@ export default function Document({ navigation }: any) {
     const [loading, setLoading] = useState(true);
     const [categorias, setCategorias] = useState<Note[]>([]);
     const [showEmpty, setShowEmpty] = useState(false);
-    const [openModal, setOpenModal] = useState(false)
+    const [openModal, setOpenModal] = useState(false);
+    const [newCategoryTitle, setNewCategoryTitle] = useState('')
+    const [newCategoryFather, setNewCategoryFather] = useState('')
+    const [newCategoryID, setNewCategoryID] = useState('')
+
 
     useEffect(() => {
         getCategorias();
@@ -54,8 +58,22 @@ export default function Document({ navigation }: any) {
         navigation.navigate("Login");
     };
 
-    function createNewCategory()
-    {
+    const createNewCategory = async () => {
+        try {
+            const response = await api.postCategorias({
+                id: null,
+                Titulo: newCategoryTitle,
+                CategoriaPai: null
+            })
+            setLoading(true);
+            setNewCategoryTitle('')
+            setOpenModal(false)
+            getCategorias()
+        }
+        catch (error) {
+            console.log(error);
+        } finally {
+        }
     }
 
     return (
@@ -67,16 +85,16 @@ export default function Document({ navigation }: any) {
                 style={styles.modalBody}
                 visible={openModal}
             >
-
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-
                         <View style={{ width: '100%', marginVertical: 20 }}>
                             <Text style={styles.title}>Cadastro de Categoria.</Text>
                         </View>
                         <View style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
                             <Text style={styles.labels}>Nome</Text>
                             <TextInput
+                                value={newCategoryTitle}
+                                onChangeText={setNewCategoryTitle}
                                 placeholderTextColor={"#9ea1a6"}
                                 placeholder="Type here"
                                 style={styles.inputTitle}
