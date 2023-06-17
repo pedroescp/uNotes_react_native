@@ -6,13 +6,14 @@ import {
     StyleSheet,
     TouchableOpacity,
     FlatList,
+    Modal,
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
 import Loading from "./Loading";
 import Empty from "./Empty";
-import ModalCategorias from "./modal";
 import { removeData } from "../utils/asyncStorage";
+import { TextInput } from "react-native-gesture-handler";
 
 export default function Document({ navigation }: any) {
     interface Note {
@@ -24,6 +25,7 @@ export default function Document({ navigation }: any) {
     const [loading, setLoading] = useState(true);
     const [categorias, setCategorias] = useState<Note[]>([]);
     const [showEmpty, setShowEmpty] = useState(false);
+    const [openModal, setOpenModal] = useState(false)
 
     useEffect(() => {
         getCategorias();
@@ -55,16 +57,64 @@ export default function Document({ navigation }: any) {
     return (
         <Navbar navigation={navigation}>
 
+            <Modal
+                animationType="fade"
+                transparent={true}
+                style={styles.modalBody}
+                visible={openModal}
+            >
+
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+
+                        <View style={{ width: '100%', marginVertical: 20 }}>
+                            <Text style={styles.title}>Cadastro de Categoria.</Text>
+                        </View>
+                        <View style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
+                            <Text style={styles.labels}>Nome</Text>
+                            <TextInput
+                                placeholderTextColor={"#9ea1a6"}
+                                placeholder="Type here"
+                                style={styles.inputTitle}
+                            />
+                        </View>
+
+                        <View style={{ display: "flex", alignItems: "flex-start", width: "100%", flexDirection: "row", justifyContent: "space-between" }}>
+                            <TouchableOpacity style={{
+                                alignItems: "center",
+                                justifyContent: "center",
+                                margin: 10,
+
+                                width: 100,
+                                height: 60,
+                            }}
+                                onPress={() => setOpenModal(false)}
+                                activeOpacity={0.7}>
+                                <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f4f4f4' }}>CANCELAR</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+                                <Text style={{ fontSize: 20, fontWeight: "bold" }}>SALVAR</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
+
             {loading && <Loading />}
             {showEmpty && <Empty />}
             <View style={{ marginTop: 140, width: '95%' }}>
                 <TouchableOpacity style={{
                     borderRadius: 12,
-                    backgroundColor: "#2a303c",
+                    backgroundColor: "#212630",
                     shadowColor: "#000",
-                }}>
-                    <View style={styles.header}>
-                        <Text style={styles.title}><Ionicons name="ios-add" size={30} color="#f4f4f4" /> NOVA CATEGORIA</Text>
+                }}
+                    onPress={() => setOpenModal(true)}
+                >
+                    <View style={{ display: "flex", alignItems: "center", padding: 15 }}>
+                        <Text style={styles.title}><Ionicons name="ios-add" size={30} color="#3398c6" /> NOVA CATEGORIA
+                        </Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -77,11 +127,12 @@ export default function Document({ navigation }: any) {
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={1}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.card}
-                            >
+                            <TouchableOpacity style={styles.card}>
                                 <View style={styles.header}>
-                                    <Text style={styles.title}>{item.titulo}</Text>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                                        <Text style={styles.title}>{item.titulo}</Text>
+                                        <Ionicons name="chevron-down-outline" size={20} color="#f4f4f4" />
+                                    </View>
                                 </View>
                             </TouchableOpacity>
                         )}
@@ -103,6 +154,19 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 
+    button: {
+        borderRadius: 10,
+        backgroundColor: "#f28c18",
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 5,
+        fontSize: 40,
+        fontWeight: "900",
+        margin: 10,
+        width: 100,
+        height: 60,
+    },
+
     card: {
         marginBottom: 10,
         flexDirection: "column",
@@ -119,9 +183,6 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     header: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         padding: 15,
     },
     title: {
@@ -176,27 +237,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-
     inputTitle: {
-        width: "100%",
-        height: 44,
+        width: '100%',
+        height: 60,
         padding: 0,
-        marginTop: 5,
+        marginTop: 10,
+        paddingHorizontal: 10,
         marginBottom: 10,
         fontSize: 30,
         fontWeight: "500",
         color: "#b6c4dd",
-    },
-
-    inputBody: {
-        textAlignVertical: "top",
-        width: "100%",
-        height: "100%",
-        marginTop: 20,
-        marginBottom: 10,
-        fontSize: 30,
-        fontWeight: "900",
-        color: "#f6f7f8",
+        borderColor: "#b6c4dd",
+        borderWidth: 0.3,
+        borderRadius: 12,
+        backgroundColor: '#2a303c'
     },
 
     viewBar: {
@@ -222,7 +276,7 @@ const styles = StyleSheet.create({
     modalView: {
         margin: 20,
         backgroundColor: "#334255",
-        borderRadius: 20,
+        borderRadius: 10,
         padding: 20,
         display: "flex",
         alignItems: "center",
@@ -235,15 +289,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 1.25,
         shadowRadius: 20,
         elevation: 90,
-        width: "100%",
-        height: "100%",
+        width: "90%",
+        height: 260,
     },
 
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
 
     modalBody: {
@@ -265,5 +319,13 @@ const styles = StyleSheet.create({
 
     root: {
         flex: 1,
+    },
+
+    labels: {
+        color: "#b6c4dd",
+        width: "100%",
+        textAlign: "left",
+        fontWeight: 'bold',
+        fontSize: 20,
     },
 });
