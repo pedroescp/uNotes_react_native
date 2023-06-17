@@ -84,7 +84,7 @@ export default function Home({ navigation }: any) {
       </TouchableOpacity>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         style={styles.modalBody}
         visible={modalVisible}
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   modalView: {

@@ -54,6 +54,10 @@ export default function Document({ navigation }: any) {
         navigation.navigate("Login");
     };
 
+    function createNewCategory()
+    {
+    }
+
     return (
         <Navbar navigation={navigation}>
 
@@ -93,7 +97,7 @@ export default function Document({ navigation }: any) {
                                 <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f4f4f4' }}>CANCELAR</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+                            <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => createNewCategory()}>
                                 <Text style={{ fontSize: 20, fontWeight: "bold" }}>SALVAR</Text>
                             </TouchableOpacity>
                         </View>
