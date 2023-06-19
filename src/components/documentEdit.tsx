@@ -59,9 +59,9 @@ export default function DocumentEdit({ navigation }: any) {
                 style={styles.inputBody}
             />
 
-            <View style={{ position: "absolute", backgroundColor: '#262b36', borderRadius: 50, padding: 10, width: '100%', bottom: 30, }}>
-                <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
 
+            <View style={styles.buttonsActions}>
+                <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
 
                     <TouchableOpacity><Text style={styles.title}>H1</Text></TouchableOpacity>
                     <TouchableOpacity><Text style={styles.title}>H2</Text></TouchableOpacity>
@@ -88,6 +88,36 @@ const styles = StyleSheet.create({
         borderRadius: 100,
     },
 
+    heading1: {
+        fontSize: 24,
+        color: 'purple',
+    },
+    link: {
+        color: 'pink',
+    },
+    mailTo: {
+        color: 'orange',
+    },
+    text: {
+        color: '#555555',
+    },
+
+    buttonsActions: {
+        position: "absolute",
+        backgroundColor: '#262b36',
+        borderRadius: 50,
+        padding: 10,
+        width: '100%',
+        bottom: 30,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 10,
+            height: 10,
+        },
+        shadowOpacity: 1.25,
+        shadowRadius: 20,
+    },
+
     inputBody: {
         textAlignVertical: "top",
         width: "100%",
@@ -95,7 +125,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
         fontSize: 30,
-        justifyContent:"center",
+        justifyContent: "center",
         fontWeight: "900",
         color: "#f6f7f8",
     },
