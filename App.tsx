@@ -9,6 +9,7 @@ import Profile from "./src/components/profile";
 import Archived from "./src/components/Archived";
 import Trash from "./src/components/Trash";
 import Document from "./src/components/document";
+import DocumentEdit from "./src/components/documentEdit";
 
 const Stack = createNativeStackNavigator();
 
@@ -102,6 +103,23 @@ export default function App() {
               headerTitleAlign: "center",
             }}
           />
+          
+          <Stack.Screen
+            name="DocumentEdit"
+            component={DocumentEdit}
+            options={{
+              headerShown: false,
+              title: "DocumentEdit",
+              headerStyle: {
+                backgroundColor: "#334155",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitleAlign: "center",
+            }}
+          />
           <Stack.Screen
             name="Trash"
             component={Trash}
@@ -118,6 +136,8 @@ export default function App() {
               headerTitleAlign: "center",
             }}
           />
+
+
           <Stack.Screen
             name="Login"
             component={Login}
