@@ -15,6 +15,7 @@ import Loading from "./Loading";
 import Empty from "./Empty";
 import { removeData } from "../utils/asyncStorage";
 import { TextInput } from "react-native-gesture-handler";
+import CharacterLimitedText from "./CharacterLimitedText";
 
 export default function Document({ navigation }: any) {
     interface Categoria {
@@ -111,7 +112,28 @@ export default function Document({ navigation }: any) {
             >
                 <View style={styles.header}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                        <Text style={styles.title}>{item.titulo}</Text>
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+
+                            <CharacterLimitedText text={item.titulo} limit={10} />
+
+                            {expandedItems.includes(item.id) ? (
+                                <View style={{ flexDirection: 'row', gap: 10 }}>
+
+                                    <TouchableOpacity>
+                                        <Ionicons name="add-outline" size={20} color="#f4f4f4" />
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity>
+                                        <Ionicons name="create-outline" size={20} color="#f4f4f4" />
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity>
+                                        <Ionicons name="trash-outline" size={20} color="#f4f4f4" />
+                                    </TouchableOpacity>
+
+                                </View>
+                            ) : ('')}
+                        </View>
                         {expandedItems.includes(item.id) ? (
                             <Ionicons name="chevron-up-outline" size={20} color="#f4f4f4" />
                         ) : (
@@ -125,7 +147,7 @@ export default function Document({ navigation }: any) {
                             <TouchableOpacity
                                 style={styles.documentCard}
                                 key={doc.id}
-                                onPress={() => navigation.navigate('DocumentEdit', {documentID: doc.id})}
+                                onPress={() => navigation.navigate('DocumentEdit', { documentID: doc.id })}
                             >
                                 <View>
                                     <Text style={styles.documentTitle}>{doc.titulo}</Text>
