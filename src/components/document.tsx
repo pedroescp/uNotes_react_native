@@ -18,6 +18,7 @@ import { TextInput } from "react-native-gesture-handler";
 import CharacterLimitedText from "./CharacterLimitedText";
 import CreateDocument from "./createNewDocument";
 import DeleteCategoria from "./deleteCategoria";
+import EditCategoria from "./editCategoria";
 
 export default function Document({ navigation }: any) {
     interface Categoria {
@@ -43,14 +44,15 @@ export default function Document({ navigation }: any) {
     const [expandedItems, setExpandedItems] = useState<number[]>([]);
 
     const [openPlusModal, setOpenPlusModal] = useState(false)
-
+    const [openEditModal, setOpenEditModal] = useState(false)
     const [openDeleteModal, setDeleteModal] = useState(false)
 
     const [categoriaId, setcategoriaId] = useState()
+    const [categoriaTitle, setCategoriaTitle] = useState('')
 
     useEffect(() => {
         getCategorias();
-        
+
     }, [loading]);
 
     const logout = async () => {
@@ -105,10 +107,15 @@ export default function Document({ navigation }: any) {
         setcategoriaId(id)
     }
 
-    function deleteModal(id: any)
-    {
+    function deleteModal(id: any) {
         setDeleteModal(true)
         setcategoriaId(id)
+    }
+
+    function editModal(id: any, title: any) {
+        setOpenEditModal(true)
+        setcategoriaId(id)
+        setCategoriaTitle(title)
     }
 
     const renderItem = ({ item }: any) => {
@@ -138,7 +145,7 @@ export default function Document({ navigation }: any) {
                                         <Ionicons name="add-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity onPress={() => alert('edit')}>
+                                    <TouchableOpacity onPress={() => editModal(item.id, item.titulo)}>
                                         <Ionicons name="create-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
@@ -228,8 +235,8 @@ export default function Document({ navigation }: any) {
             </Modal>
 
             <CreateDocument open={openPlusModal} setOpen={setOpenPlusModal} categoriaID={categoriaId} onClose={getCategorias} />
-
             <DeleteCategoria open={openDeleteModal} setOpen={setDeleteModal} categoriaID={categoriaId} onClose={getCategorias} />
+            <EditCategoria open={openEditModal} setOpen={setOpenEditModal} categoriaID={categoriaId} onClose={getCategorias} title={categoriaTitle} />
 
             {loading && <Loading />}
             {showEmpty && <Empty />}
