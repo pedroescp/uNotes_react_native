@@ -16,6 +16,7 @@ import Empty from "./Empty";
 import { removeData } from "../utils/asyncStorage";
 import { TextInput } from "react-native-gesture-handler";
 import CharacterLimitedText from "./CharacterLimitedText";
+import CreateDocument from "./createNewDocument";
 
 export default function Document({ navigation }: any) {
     interface Categoria {
@@ -38,15 +39,15 @@ export default function Document({ navigation }: any) {
     const [showEmpty, setShowEmpty] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [newCategoryTitle, setNewCategoryTitle] = useState('')
-    const [newCategoryFather, setNewCategoryFather] = useState('')
-    const [newCategoryID, setNewCategoryID] = useState('')
-    const [changeIcon, setChangeIcon] = useState(false)
     const [expandedItems, setExpandedItems] = useState<number[]>([]);
 
+    const [openPlusModal, setOpenPlusModal] = useState(false)
 
+    const [categoriaId, setcategoriaId] = useState()
 
     useEffect(() => {
         getCategorias();
+        
     }, [loading]);
 
     const logout = async () => {
@@ -96,6 +97,11 @@ export default function Document({ navigation }: any) {
         }
     }
 
+    function plusModal(id: any) {
+        setOpenPlusModal(true)
+        setcategoriaId(id)
+    }
+
     const renderItem = ({ item }: any) => {
         const filteredDocuments = documentos.filter((doc) => doc.categoriaId === item.id);
 
@@ -119,15 +125,15 @@ export default function Document({ navigation }: any) {
                             {expandedItems.includes(item.id) ? (
                                 <View style={{ flexDirection: 'row', gap: 10 }}>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => plusModal(item.id)}>
                                         <Ionicons name="add-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => alert('edit')}>
                                         <Ionicons name="create-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => alert('remove')}>
                                         <Ionicons name="trash-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
@@ -143,6 +149,7 @@ export default function Document({ navigation }: any) {
                 </View>
                 {expandedItems.includes(item.id) && (
                     <View style={{ marginTop: 10, padding: 15 }}>
+                        {filteredDocuments == "" && <Text style={styles.documentText}>Nenhum documento aparente</Text>}
                         {filteredDocuments.map((doc) => (
                             <TouchableOpacity
                                 style={styles.documentCard}
@@ -210,6 +217,8 @@ export default function Document({ navigation }: any) {
                 </View>
 
             </Modal>
+
+            <CreateDocument open={openPlusModal} setOpen={setOpenPlusModal} categoriaID={categoriaId} onClose={getCategorias} />
 
             {loading && <Loading />}
             {showEmpty && <Empty />}
