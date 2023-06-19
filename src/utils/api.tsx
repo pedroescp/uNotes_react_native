@@ -177,6 +177,18 @@ const api = {
     return result.data;
   },
 
+  
+  getDocumento: async (data: any) => {
+    let authorization = await getAutorization();
+
+    const result = await axios.get(`documentos/obter-por-id?id=${data}`, {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
 
 };
 
