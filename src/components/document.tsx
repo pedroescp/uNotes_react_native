@@ -125,6 +125,7 @@ export default function Document({ navigation }: any) {
                             <TouchableOpacity
                                 style={styles.documentCard}
                                 key={doc.id}
+                                onPress={() => navigation.navigate('DocumentEdit', {documentID: doc.id})}
                             >
                                 <View>
                                     <Text style={styles.documentTitle}>{doc.titulo}</Text>
