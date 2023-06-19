@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     FlatList,
     Modal,
+    Animated, Easing
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
@@ -16,32 +17,57 @@ import { removeData } from "../utils/asyncStorage";
 import { TextInput } from "react-native-gesture-handler";
 
 export default function Document({ navigation }: any) {
-    interface Note {
+    interface Categoria {
         id: number;
         titulo: string;
         texto: string;
     }
 
+    interface Document {
+        categoriaId: number;
+        id: string;
+        notas: string;
+        texto: string;
+        titulo: string;
+    }
+
     const [loading, setLoading] = useState(true);
-    const [categorias, setCategorias] = useState<Note[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [documentos, setDocumentos] = useState<Document[]>([])
     const [showEmpty, setShowEmpty] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [newCategoryTitle, setNewCategoryTitle] = useState('')
     const [newCategoryFather, setNewCategoryFather] = useState('')
     const [newCategoryID, setNewCategoryID] = useState('')
+    const [changeIcon, setChangeIcon] = useState(false)
+    const [expandedItems, setExpandedItems] = useState<number[]>([]);
+
 
 
     useEffect(() => {
         getCategorias();
     }, [loading]);
 
+    const logout = async () => {
+        removeData("user");
+        removeData("token");
+        navigation.navigate("Login");
+    };
+
     const getCategorias = async () => {
         try {
             setShowEmpty(false)
             setCategorias([]);
-            const response = await api.getAllCategorias();
-            setCategorias(response.data);
-            if (!response.data || response.data.length <= 0) setShowEmpty(true);
+            const categoria = await api.getAllCategorias();
+            const documento = await api.getAllDocumentos()
+
+            if (!categoria.data || categoria.data.length <= 0) setShowEmpty(true);
+
+
+
+            setDocumentos(documento.data)
+            setCategorias(categoria.data);
+
 
         } catch (error: any) {
             console.error(error);
@@ -49,13 +75,6 @@ export default function Document({ navigation }: any) {
         } finally {
             setLoading(false);
         }
-    };
-
-    const logout = async () => {
-        removeData("user");
-        removeData("token");
-
-        navigation.navigate("Login");
     };
 
     const createNewCategory = async () => {
@@ -75,6 +94,51 @@ export default function Document({ navigation }: any) {
         } finally {
         }
     }
+
+    const renderItem = ({ item }: any) => {
+        const filteredDocuments = documentos.filter((doc) => doc.categoriaId === item.id);
+
+        return (
+            <TouchableOpacity
+                style={styles.card}
+                onPress={() => {
+                    if (expandedItems.includes(item.id)) {
+                        setExpandedItems(expandedItems.filter((id) => id !== item.id));
+                    } else {
+                        setExpandedItems([...expandedItems, item.id]);
+                    }
+                }}
+            >
+                <View style={styles.header}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                        <Text style={styles.title}>{item.titulo}</Text>
+                        {expandedItems.includes(item.id) ? (
+                            <Ionicons name="chevron-up-outline" size={20} color="#f4f4f4" />
+                        ) : (
+                            <Ionicons name="chevron-down-outline" size={20} color="#f4f4f4" />
+                        )}
+                    </View>
+                </View>
+                {expandedItems.includes(item.id) && (
+                    <View style={{ marginTop: 10, padding: 15 }}>
+                        {filteredDocuments.map((doc) => (
+                            <TouchableOpacity
+                                style={styles.documentCard}
+                                key={doc.id}
+                            >
+                                <View>
+                                    <Text style={styles.documentTitle}>{doc.titulo}</Text>
+                                </View>
+                                <View>
+                                    <Text numberOfLines={1} style={styles.documentText}>{doc.texto}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                )}
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <Navbar navigation={navigation}>
@@ -148,17 +212,9 @@ export default function Document({ navigation }: any) {
                         data={categorias}
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={1}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.card}>
-                                <View style={styles.header}>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                                        <Text style={styles.title}>{item.titulo}</Text>
-                                        <Ionicons name="chevron-down-outline" size={20} color="#f4f4f4" />
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        )}
+                        renderItem={renderItem}
                     />
+
                 )}
             </View>
         </Navbar>
@@ -166,6 +222,26 @@ export default function Document({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
+
+    documentCard: {
+        width: '100%',
+        backgroundColor: '#555a63',
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+
+    documentTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    documentText: {
+        fontSize: 14,
+        fontStyle: "italic",
+        color: '#fff',
+    },
+
     div: {
         flex: 1,
         marginTop: 50,
@@ -212,14 +288,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#f4f4f4",
     },
-    body: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 15,
-    },
-
-
     container: {
         flex: 1,
         backgroundColor: "#334155",
