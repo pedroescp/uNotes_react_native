@@ -17,6 +17,7 @@ import { removeData } from "../utils/asyncStorage";
 import { TextInput } from "react-native-gesture-handler";
 import CharacterLimitedText from "./CharacterLimitedText";
 import CreateDocument from "./createNewDocument";
+import DeleteCategoria from "./deleteCategoria";
 
 export default function Document({ navigation }: any) {
     interface Categoria {
@@ -42,6 +43,8 @@ export default function Document({ navigation }: any) {
     const [expandedItems, setExpandedItems] = useState<number[]>([]);
 
     const [openPlusModal, setOpenPlusModal] = useState(false)
+
+    const [openDeleteModal, setDeleteModal] = useState(false)
 
     const [categoriaId, setcategoriaId] = useState()
 
@@ -102,6 +105,12 @@ export default function Document({ navigation }: any) {
         setcategoriaId(id)
     }
 
+    function deleteModal(id: any)
+    {
+        setDeleteModal(true)
+        setcategoriaId(id)
+    }
+
     const renderItem = ({ item }: any) => {
         const filteredDocuments = documentos.filter((doc) => doc.categoriaId === item.id);
 
@@ -133,7 +142,7 @@ export default function Document({ navigation }: any) {
                                         <Ionicons name="create-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity onPress={() => alert('remove')}>
+                                    <TouchableOpacity onPress={() => deleteModal(item.id)}>
                                         <Ionicons name="trash-outline" size={20} color="#f4f4f4" />
                                     </TouchableOpacity>
 
@@ -219,6 +228,8 @@ export default function Document({ navigation }: any) {
             </Modal>
 
             <CreateDocument open={openPlusModal} setOpen={setOpenPlusModal} categoriaID={categoriaId} onClose={getCategorias} />
+
+            <DeleteCategoria open={openDeleteModal} setOpen={setDeleteModal} categoriaID={categoriaId} onClose={getCategorias} />
 
             {loading && <Loading />}
             {showEmpty && <Empty />}
