@@ -5,7 +5,8 @@ import {
 } from "react";
 import api from "../utils/api";
 import { getData, removeData, saveData } from "../utils/asyncStorage";
-import { Alert } from "react-native";
+import ErrorModal from "../components/modalError";
+import ModalError from "../components/modalError";
 
 export const AuthContext = createContext({});
 
@@ -13,10 +14,11 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [openErrorModal, setOpenErrorModal] = useState(false)
+
   useEffect(() => {
     const getUser = async () => {
       let user = await getData("token");
-
       return user;
     };
     getUser()
@@ -38,13 +40,13 @@ export const AuthProvider = ({ children }: any) => {
         navigation?.navigate("Home");
         return true
       } else {
-        alert("Usuário ou senha inválida. Tente novamente.")
+        setOpenErrorModal(true)
         return false
       }
 
 
     } catch (error) {
-      alert("Usuário ou senha inválida. Tente novamente.")
+      setOpenErrorModal(true)
       return false
 
     }
@@ -59,6 +61,8 @@ export const AuthProvider = ({ children }: any) => {
     <AuthContext.Provider
       value={{ authenticated: !!user, user, loading, login, logout }}
     >
+      {openErrorModal && <ModalError open={openErrorModal} setOpen={setOpenErrorModal} title={"Usuário ou senha inválida. Tente novamente."} />}
+
       {children}
     </AuthContext.Provider>
   );
