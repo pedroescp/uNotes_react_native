@@ -7,15 +7,23 @@ import api from "../utils/api";
 import Navbar from "./navbar";
 import { removeData } from "../utils/asyncStorage";
 import { useRoute } from "@react-navigation/native";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import Loading from "./Loading";
+import Markdown from 'react-native-simple-markdown'
+import CharacterLimitedText from "./CharacterLimitedText";
+
 
 export default function DocumentEdit({ navigation }: any) {
+
+    console.log(navigation);
+    
 
     const [loading, setLoading] = useState(true);
     const [categorias, setCategorias] = useState([]);
     const [documento, setDocumento] = useState()
     const [textDocument, setTextDocument] = useState('')
     const [showEmpty, setShowEmpty] = useState(false);
+    const [tituloDocument, setTituloDocument] = useState('')
 
     const route = useRoute();
     const { documentID }: any = route.params;
@@ -37,6 +45,7 @@ export default function DocumentEdit({ navigation }: any) {
             const documento = await api.getDocumento(documentID)
             setDocumento(documento.data)
             setTextDocument(documento.data.texto)
+            setTituloDocument(documento.data.titulo)
 
 
         } catch (error: any) {
@@ -47,18 +56,47 @@ export default function DocumentEdit({ navigation }: any) {
         }
     };
 
+    function redirectDocument() {
+        navigation.navigate('Document')
+        alert('asdasd')
+    }
+
     return (
         <Navbar navigation={navigation}>
-            <TextInput
-                placeholder={"Escreva um documento"}
-                multiline={true}
-                numberOfLines={4}
-                value={textDocument}
-                onChangeText={setTextDocument}
-                placeholderTextColor={"#9ea1a6"}
-                style={styles.inputBody}
-            />
 
+            {loading && <Loading />}
+
+            <View style={{
+                width: "100%",
+                height: "85%",
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                bottom: 20,
+                position: "absolute",
+                paddingHorizontal: 16,
+            }}>
+
+                <View style={{ display: "flex", flexDirection: "row", alignItems: "center", width: '100%' }}>
+                    <View>
+                        <TouchableOpacity 
+                        onPress={() => console.log('asdasdasd')}
+                        >
+                            <Ionicons name="arrow-back" size={40} color="#c5cedd" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ width: '80%', alignItems: "center" }}>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>
+                            <CharacterLimitedText text={tituloDocument} limit={33} />
+                        </Text>
+                    </View>
+                </View>
+
+                <ScrollView style={{ width: '100%', backgroundColor: '#ffff', borderRadius: 10, padding: 10, }}>
+                    <Markdown styles={markdownStyles}>
+                        {textDocument}
+                    </Markdown>
+                </ScrollView>
+            </View>
 
             <View style={styles.buttonsActions}>
                 <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
@@ -75,7 +113,76 @@ export default function DocumentEdit({ navigation }: any) {
     );
 }
 
+const markdownStyles = {
+    link: {
+        color: 'pink',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    mailTo: {
+        color: 'blue',
+        marginTop: 3,
+        marginBottom: 3,
+    },
+    text: {
+        color: 'black',
+        marginTop: 5,
+        marginBottom: 5,
+    },
+    heading1: {
+        fontSize: 35,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    heading2: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    heading3: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 8,
+        marginBottom: 8,
+    },
+    strong: {
+        fontWeight: 'bold',
+        marginTop: 3,
+        marginBottom: 3,
+    },
+    em: {
+        fontStyle: 'italic',
+        marginTop: 3,
+        marginBottom: 3,
+    },
+    codeBlock: {
+        backgroundColor: 'lightgray',
+        padding: 5,
+        marginTop: 3,
+        marginBottom: 3,
+    },
+    blockQuote: {
+        backgroundColor: 'lightgreen',
+        padding: 5,
+        marginTop: 3,
+        marginBottom: 3,
+    },
+    listItem: {
+        marginTop: 3,
+        marginBottom: 3,
+    },
+};
+
 const styles = StyleSheet.create({
+
+    documentTitle: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        color: '#fff',
+
+    },
 
     title: {
         width: 40,
@@ -103,6 +210,7 @@ const styles = StyleSheet.create({
     },
 
     buttonsActions: {
+        display: "none",
         position: "absolute",
         backgroundColor: '#262b36',
         borderRadius: 50,
