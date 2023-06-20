@@ -16,6 +16,7 @@ import Navbar from "./navbar";
 import Loading from "./Loading";
 import { Image } from "react-native-elements";
 import Input from "./Input";
+import ProfileDocument from "./ProfileModal";
 
 export default function NoteCharge({ navigation }: any) {
   const [loading, setLoading] = useState(true);
@@ -34,60 +35,9 @@ export default function NoteCharge({ navigation }: any) {
 
   useEffect(() => {
     getprofile();
-
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true);
-        Animated.timing(buttonOpacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }).start();
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false);
-        Animated.timing(buttonOpacity, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }).start();
-      }
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
   }, [loading]);
 
-  const updateProfile = async () => {
-    try {
-      resetPage();
-      if (id || login || nome || email || telefone) {
-        alert("Nao pode deixar campo vazio")
-      } else {
-        const response = await api.usuarioPut({
-          id: id,
-          login: login,
-          nome: nome,
-          email: email,
-          telefone: telefone,
-          cargoId: "5697c024-c2df-4651-b0da-732fe3a93975",
-        });
 
-        if (!response.data || response.data.length <= 0) setShowEmpty(true);
-        setProfile(response.data);
-        resetPage()
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getprofile = async () => {
     try {
@@ -115,76 +65,20 @@ export default function NoteCharge({ navigation }: any) {
   return (
     <Navbar navigation={navigation}>
       {loading && <Loading />}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={async () => {
-          setModalVisible(false);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              style={{ position: "absolute", left: 15, top: 15 }}
-            >
-              <Ionicons name="arrow-back" size={40} color="#c5cedd" />
-            </TouchableOpacity>
-            <ScrollView
-              style={{
-                flex: 1,
-                width: "100%",
-                marginTop: 50,
-                marginBottom: 70,
-              }}
-              showsVerticalScrollIndicator={false}
-            >
-              <Input
-                register={nome}
-                placeholder={"Nome"}
-                setRegister={setNome}
-              />
 
-              <Input
-                register={login}
-                placeholder={"Login"}
-                setRegister={setLogin}
-              />
-              <Input
-                register={email}
-                placeholder={"Email"}
-                setRegister={setEmail}
-              />
-              <Input
-                register={telefone}
-                placeholder={"Telefone"}
-                setRegister={setTelefone}
-              />
-              <Input
-                register={cargo}
-                placeholder={"Cargo"}
-                setRegister={setCargo}
-              />
-            </ScrollView>
-          </View>
-          <Animated.View
-            style={{
-              opacity: buttonOpacity,
-              position: "absolute",
-              bottom: 20,
-              width: "80%",
-            }}
-          >
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => updateProfile()}
-            >
-              <Text style={{ fontSize: 25 }}>Salvar</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </Modal>
+      <ProfileDocument
+        open={modalVisible}
+        setOpen={setModalVisible}
+        onClose={getprofile}
+
+        login={login} 
+        nome={nome}
+        telefone={telefone}
+        cargo={cargo}
+        email={email}
+        id={id}
+        />
+
       <View style={styles.div}>
         {!loading && (
           <>
