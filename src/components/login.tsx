@@ -43,6 +43,17 @@ export default function Login() {
         return true; // Retorna "true" para desabilitar o comportamento de voltar.
       };
 
+      setLoading(false)
+      setUsuarioRegister("")
+      setEmailRegister("")
+      setPasswordRegister("")
+      setPasswordRegisterTwo("")
+      setDisabledCamps(false)
+      setLoginEye(true)
+      setRegisterEye(true)
+      setEmailLogin("")
+      setPasswordLogin("")
+
       // Adicione um listener para interceptar o evento de voltar.
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
@@ -65,7 +76,7 @@ export default function Login() {
   async function handleLogin() {
     if (emailLogin == "" || passwordLogin == "") {
       setTitle('Login e/ou senha nao devem estar em branco')
-      setOpenErrorModal(true) 
+      setOpenErrorModal(true)
     }
     else {
       setLoading(true)
@@ -106,17 +117,27 @@ export default function Login() {
 
       setLoading(true)
 
-      api.usuarioRegister(registroData).then((res) => {
-        if (res && res.status === 201) {
-          login(usuarioRegister, passwordRegister, navigation);
-        } else {
-          setDisabledCamps(false)
-          setLoading(false)
+      try {
+        api.usuarioRegister(registroData).then((res) => {
+          if (res && res.status === 201) {
+            login(usuarioRegister, passwordRegister, navigation);
+          } else {
 
-          setTitle('Algo inesperado aconteceu.')
-          setOpenErrorModal(true)
-        }
-      });
+            setDisabledCamps(false)
+            setLoading(false)
+
+            setTitle('Algo inesperado aconteceu.')
+            setOpenErrorModal(true)
+          }
+        });
+      } catch (error) {        
+        setTitle('Usuario/E-mail ja existente!')
+        setOpenErrorModal(true)
+        setLoading(false)
+        
+      }
+
+
     } else {
       setTitle('As senhas devem ser iguais !')
       setOpenErrorModal(true)
@@ -146,7 +167,7 @@ export default function Login() {
               </TouchableOpacity>
               <View style={styles.inputs}>
                 <View style={styles.divider}></View>
-                <Text style={styles.labels}>Usuario/E-email</Text>
+                <Text style={styles.labels}>Usuario/E-mail</Text>
                 <TextInput
 
                   placeholderTextColor={"#9ea1a6"}
