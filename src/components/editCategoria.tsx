@@ -20,7 +20,7 @@ export default function EditCategoria({ open, setOpen, categoriaID, onClose, tit
                     "id": categoriaID,
                     "titulo": inputModal,
                     "categoriaPai": null
-                })
+                });
                 
                 closeModal()
                 onClose()
