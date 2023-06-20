@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Alert, BackHandler } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, BackHandler } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { NavigationContext, useFocusEffect } from "@react-navigation/native";
 import { AuthContext } from "../content/auth";
@@ -8,6 +8,7 @@ import { getData, removeData } from "../utils/asyncStorage";
 import api from "../utils/api";
 import Loading from "./Loading";
 import { Ionicons } from "@expo/vector-icons";
+import ModalError from "./modalError";
 
 
 export default function Login() {
@@ -30,6 +31,9 @@ export default function Login() {
   const [disabledCamps, setDisabledCamps] = useState(false)
   const [loginEye, setLoginEye] = useState(true)
   const [registerEye, setRegisterEye] = useState(true)
+
+  const [openErrorModal, setOpenErrorModal] = useState(false)
+  const [title, setTitle] = useState('')
 
 
   useFocusEffect(
@@ -59,8 +63,10 @@ export default function Login() {
   });
 
   async function handleLogin() {
-    if (emailLogin == "" || passwordLogin == "")
-      alert("Login e/ou senha nao devem estar em branco");
+    if (emailLogin == "" || passwordLogin == "") {
+      setTitle('Login e/ou senha nao devem estar em branco')
+      setOpenErrorModal(true) 
+    }
     else {
       setLoading(true)
       setDisabledCamps(true)
@@ -87,7 +93,8 @@ export default function Login() {
       passwordRegister == "" ||
       passwordRegisterTwo == ""
     ) {
-      alert("Prencha os campos corretamente !");
+      setTitle('Prencha os campos corretamente !')
+      setOpenErrorModal(true)
     } else if (passwordRegister == passwordRegisterTwo) {
       const registroData = {
         login: usuarioRegister,
@@ -105,11 +112,14 @@ export default function Login() {
         } else {
           setDisabledCamps(false)
           setLoading(false)
-          alert("Algo inesperado aconteceu.");
+
+          setTitle('Algo inesperado aconteceu.')
+          setOpenErrorModal(true)
         }
       });
     } else {
-      alert("As senhas devem ser iguais !");
+      setTitle('As senhas devem ser iguais !')
+      setOpenErrorModal(true)
     }
   }
 
@@ -118,6 +128,8 @@ export default function Login() {
       <View style={styles.container}>
 
         {loading && <Loading />}
+
+        {openErrorModal && <ModalError open={openErrorModal} setOpen={setOpenErrorModal} title={title} />}
 
         <View style={{ ...styles.card, height: showRegister ? 600 : 500 }}>
           {loading && <Loading />}
