@@ -70,8 +70,6 @@ export default function Document({ navigation }: any) {
 
             if (!categoria.data || categoria.data.length <= 0) setShowEmpty(true);
 
-
-
             setDocumentos(documento.data)
             setCategorias(categoria.data);
 
