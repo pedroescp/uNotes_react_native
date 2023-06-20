@@ -28,8 +28,6 @@ export default function ModalNotes({
     if (title || bodyNote && type != 3 || type != 2) {
       if (id == null) {
         try {
-          console.log(bodyNote == null);
-
           if (bodyNote == null) setbodyNote(" ")
 
           const response = await api.notesPost({
