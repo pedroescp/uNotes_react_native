@@ -94,7 +94,7 @@ export default function Navbar({ children, navigation }: any) {
       >
         <View style={styles.userIcon}>
           <Image
-            source={{ uri: "https://picsum.photos/200" }}
+            source={{ uri: "../icons/profile.jpg" }}
             style={styles.icon}
           />
         </View>
