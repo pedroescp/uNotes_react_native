@@ -126,7 +126,7 @@ export default function EditCategoria({ open, setOpen, categoriaID, onClose, tit
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <View style={{ width: '100%', marginVertical: 20 }}>
-                        <Text style={styles.title}>Adicionar novo documento.</Text>
+                        <Text style={styles.title}>Editar titulo da categoria.</Text>
                     </View>
                     <View style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
                         <Text style={styles.labels}>Titulo</Text>
