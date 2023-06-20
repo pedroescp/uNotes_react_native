@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { getData, removeData } from "../utils/asyncStorage";
 import api from "../utils/api";
+import { useRoute } from "@react-navigation/native";
 
 export default function Home({ navigation }: any) {
   const [user, setUser] = useState("");
@@ -17,6 +18,7 @@ export default function Home({ navigation }: any) {
 
   useEffect(() => {
     getUser();
+
   }, [user]);
 
   const getUser = async () => {
