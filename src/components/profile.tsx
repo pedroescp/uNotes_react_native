@@ -101,7 +101,6 @@ export default function NoteCharge({ navigation }: any) {
       setNome(response.data.nome);
       setTelefone(response.data.telefone);
       setCargo(response.data.cargoId)
-      console.log(response);
     } catch (error) {
       console.error(error);
     } finally {
