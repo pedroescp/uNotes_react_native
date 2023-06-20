@@ -65,7 +65,7 @@ export default function Home({ navigation }: any) {
           })
         }
       >
-        <Text style={styles.buttonText}>Documentacao</Text>
+        <Text style={styles.buttonText}>Documentação</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.navbar}
