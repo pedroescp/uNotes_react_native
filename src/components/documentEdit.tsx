@@ -1,13 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
-    StyleSheet, Text, View,
+    StyleSheet, Text, TouchableOpacity, View,
 } from "react-native";
 import api from "../utils/api";
 import Navbar from "./navbar";
 import { removeData } from "../utils/asyncStorage";
 import { useRoute } from "@react-navigation/native";
-import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import Loading from "./Loading";
 import Markdown from 'react-native-simple-markdown'
 import CharacterLimitedText from "./CharacterLimitedText";
@@ -78,8 +78,8 @@ export default function DocumentEdit({ navigation }: any) {
 
                 <View style={{ display: "flex", flexDirection: "row", alignItems: "center", width: '100%' }}>
                     <View>
-                        <TouchableOpacity 
-                        onPress={() => console.log('asdasdasd')}
+                        <TouchableOpacity
+                        onPress={() => navigation.navigate('Document')}
                         >
                             <Ionicons name="arrow-back" size={40} color="#c5cedd" />
                         </TouchableOpacity>
