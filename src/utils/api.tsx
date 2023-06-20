@@ -189,6 +189,38 @@ const api = {
     return result.data;
   },
 
+  postDocumento: async (data: any) => {
+    let authorization = await getAutorization();
+
+    const result = await axios.post("documentos", data, {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
+  deleteCategoria: async (id: any) => {
+    let authorization = await getAutorization();
+    const result = await axios.delete(`categoria?notaId=${id}`, {
+      headers: {
+        authorization,
+      },
+    });
+  },
+
+  editCategoria: async (data: any) => {
+    let authorization = await getAutorization();
+
+    const result = await axios.put("categoria", data, {
+      headers: {
+        authorization,
+      },
+    });
+    return result.data;
+  },
+
+
 
 };
 
